@@ -1,0 +1,4 @@
+cd build
+make
+cd ..
+python3 test_items.py

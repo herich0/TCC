@@ -1,0 +1,4 @@
+tft_simulator/build/
+__pycache__/
+*.so
+*.o

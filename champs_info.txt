@@ -1,0 +1,1112 @@
+Blitzcrank
+Blitzcrank
+Magic Fighter
+Party AnimalParty Animal
+Space GrooveSpace Groove
+VanguardVanguard
+Gold5
+Party Crasher
+Party Crasher
+Mana20/100
+Passive: Every 2/2/0.5 seconds, call down a bolt on the highest Health nearby enemy that deals 60/90/150 (AP) magic damage.
+
+Active: Summon a disco ball at the largest clump of enemies, then knock up the current target into it, dealing 150/225/999 (AP) magic damage. They crash down into the disco ball, dealing 175/265/5000 (AP) magic damage in a three hex radius. Enter The Groove for 1 second per enemy hit.
+Bolt Damage: 60/90/150 (AP)
+Uppercut Damage: 150/225/999 (AP)
+Explosion Damage: 175/265/5000 (AP)
+blitz stats:
+Health
+Mana1000/1800/3240
+Mana
+Mana20/100
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana50
+Magic Resist
+Mana50
+Attack Speed
+Mana0.9
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Fiora
+Fiora
+Attack Fighter
+Divine DuelistDivine Duelist
+AnimaAnima
+MarauderMarauder
+Gold5
+Perfect Bladework
+Perfect Bladework
+Mana0/80
+Passive: Every 2 attacks, reveal a Vital on the target. If a Vital exists, dash to attack it dealing 40/60/777 (AD) bonus true damage and heal for 15% of the damage dealt.
+
+Active: Reveal 6 Vitals on the target and quickly attack them all. If the target dies, remaining Vitals transfer to the nearest enemy. Upon striking the final Vital, create a two hex aura that heals allies within for 200/250/999 (AP) over 5 seconds.
+Vital Damage: 40/60/777 (AD)
+Aura Healing: 200/250/999 (AP)
+fiora stats:
+Health
+Mana1200/2160/3888
+Mana
+Mana0/80
+Attack Damage
+Mana80/120/180
+Ability Power
+Mana100
+Armor
+Mana65
+Magic Resist
+Mana65
+Attack Speed
+Mana0.9
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Jhin
+Jhin
+Attack Marksman
+Dark StarDark Star
+EradicatorEradicator
+SniperSniper
+Gold5
+Space Opera
+Space Opera
+Mana0/44
+Passive: Jhin has a fixed attack speed of 0.9/0.9/1.4 and converts every 1% of bonus Attack Speed into 0.75 bonus Attack Damage.
+
+Active: Summon 4 spectral hands that fire alongside Jhin for the next 4 attacks. Each hand deals 45/68/688 (AD) physical damage per shot. The final shots deal 244% more damage and pierce through the most enemies in a line, dealing 44% reduced damage per target hit.
+Attacks Per Second: 0.9/0.9/1.4
+Damage: AP4/6/44
+Damage: 45/68/688
+41/62/644 (AD)
++
+4/6/44 (AP)
+jhin stats:
+Health
+Mana900/1620/2916
+Mana
+Mana0/44
+Attack Damage
+Mana80/120/180
+Ability Power
+Mana100
+Armor
+Mana40
+Magic Resist
+Mana40
+Attack Speed
+Mana0.9
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana6
+
+Morgana
+Morgana
+Magic Fighter
+Dark LadyDark Lady
+Gold5
+Dark Form
+Dark Form
+Mana20/60
+Passive: Heal for 20% of Ability damage.
+
+Active: Transform into Dark Form for 5 seconds, gaining 250/300/4000 (AP) Shield for the duration. While in Dark Form, tether the 3 nearest enemies, dealing 50/75/1500 (AP) magic damage per second to each one.
+
+At the end of the transfomation, deal 240/360/4000 (AP) magic damage to all tethered enemies.
+Shield: 250/300/4000 (AP)
+Damage Per Second: 50/75/1500 (AP)
+Delayed Damage: 240/360/4000 (AP)
+morgana stats:
+Health
+Mana1000/1800/3240
+Mana
+Mana20/60
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana50
+Magic Resist
+Mana50
+Attack Speed
+Mana0.9
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana2
+
+Shen
+Shen
+Magic Fighter
+BulwarkBulwark
+BastionBastion
+Gold5
+Reality Tear
+Reality Tear
+Mana10/70
+Passive: On cast, attacks gain 40/60/777 (AP) stacking bonus magic damage. Starting from the third cast, gain true damage instead.
+
+Active: Gain 321/473/3767 (HealthAP) Shield for 3 seconds, then slice open a rift on the largest group of champions dealing the Passive's bonus damage to all enemies within. Enemies have their Attack Speed slowed by 50/50/99% while allies within gain 80/80/999% Attack Speed, both rapidly decaying over 3 seconds.
+Bonus Damage: 40/60/777 (AP)
+Shield: 321/473/3767
+8% Health +
+225/300/3456 AP
+shen stats:
+Health
+Mana1200/2160/3888
+Mana
+Mana10/70
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana65
+Magic Resist
+Mana65
+Attack Speed
+Mana0.9
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Vex
+Vex
+Magic Marksman
+DoomerDoomer
+Gold5
+Ability:
+Lend Me a Hand, Shadow!
+Lend Me a Hand, Shadow!
+Mana0/60
+Passive: Every time Vex attacks, Shadow strikes a nearby enemy, dealing 30/45/250 (AP) magic damage. Whenever an enemy is struck 5 times by Shadow, Shadow strikes them again.
+
+Active: Shadow launches 3 empowered strikes, dealing 130/195/1000 (AP) magic damage instead.
+Strike Damage: 30/45/250 (AP)
+Empowered Strike Damage: 130/195/1000 (AP)
+vex stats:
+Health
+Mana900/1620/2916
+Mana
+Mana0/60
+Attack Damage
+Mana15/23/34
+Ability Power
+Mana100
+Armor
+Mana40
+Magic Resist
+Mana40
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana6
+
+Karma
+Karma
+Magic Caster
+Dark StarDark Star
+VoyagerVoyager
+Gold4
+Singularity
+Singularity
+Mana10/55
+Gather the force of a black hole, dealing 570/855/5000 (AP) magic damage split between the target and the 2/2/4 closest enemies to them. The target takes an additional 150/225/1000 (AP) magic damage.
+Damage: 570/855/5000 (AP)
+Targets:2/2/4
+Additional Damage: 150/225/1000 (AP)
+karma stats:
+Health
+Mana850/1530/2754
+Mana
+Mana10/55
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana30
+Magic Resist
+Mana30
+Attack Speed
+Mana0.75
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Kindred
+Kindred
+Attack Marksman
+N.O.V.A.N.O.V.A.
+ChallengerChallenger
+Gold4
+Cosmic Pursuit
+Cosmic Pursuit
+Mana0/40
+Passive: Attacks and Abilities mark the target. When an enemy reaches 3 marks, Wolf consumes the marks, dealing 125/190/1000 (ADAP) physical damage.
+
+Active: Jump up to 1 hex away and fire arrows at the nearest 3/3/5 targets, each dealing 0.6/0.9/6 (AD) physical damage.
+
+N.O.V.A. Strike: Gain 5% Damage Amp. Now and every 5 seconds after, add a mark to all enemies.
+Wolf Damage: AP10/15/100
+Wolf Damage: 125/190/1000
+115/175/900 (AD)
++
+10/15/100 (AP)
+Targets:3/3/5
+Arrow Damage: 0.6/0.9/6 (AD)
+kindred stats:
+Health
+Mana850/1530/2754
+Mana
+Mana0/40
+Attack Damage
+Mana55/83/124
+Ability Power
+Mana100
+Armor
+Mana30
+Magic Resist
+Mana30
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana6
+
+Nami
+Nami
+Magic Caster
+Space GrooveSpace Groove
+ReplicatorReplicator
+Gold4
+Bubble Pop
+Bubble Pop
+Mana25/70
+Toss a disco bubble at the target that deals 410/615/5000 (AP) split between enemies in a one hex radius. The explosion sends 3 globs towards nearby enemies that deal 110/165/1000 (AP) magic damage. On cast, Nami enters The Groove for 3 seconds.
+Damage: 410/615/5000 (AP)
+Bounce Damage: 110/165/1000 (AP)
+nami stats:
+Health
+Mana850/1530/2754
+Mana
+Mana25/70
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana30
+Magic Resist
+Mana30
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Riven
+Riven
+Hybrid Fighter
+TimebreakerTimebreaker
+RogueRogue
+Gold4
+Time Warp
+Time Warp
+Mana0/20
+Passive: This Ability adapts to Attack Damage or Ability Power, whichever is higher. Attacks deal 75/115/300 (AD) physical damage.
+
+Active: Dash to a nearby hex, gaining 100/150/1200 Shield for 2 seconds and slashing adjacent enemies for 90/135/1000 (AD) physical damage. Every third cast, leap into the air and launch a wave of energy that deals 160/240/2000 (AD) physical damage to enemies in a line.
+Attack Damage: 75/115/300 (AP) or 75/115/300 (AD)
+Shield: 100/150/1200
+Damage: 90/135/1000 (AP) or 90/135/1000 (AD)
+Wave Damage: 160/240/2000 (AP) or 160/240/2000 (AD)
+riven stats:
+Health
+Mana1100/1980/3564
+Mana
+Mana0/20
+Attack Damage
+Mana0/0/0
+Ability Power
+Mana100
+Armor
+Mana60
+Magic Resist
+Mana60
+Attack Speed
+Mana0.85
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Aurora
+Aurora
+Magic Caster
+AnimaAnima
+VoyagerVoyager
+Gold3
+Hopped-Up Hacks
+Hopped-Up Hacks
+Mana20/80
+Open a 2 hex rift containing the target, Hacking enemies within for 4 seconds and dealing 80/120/190 (AP) magic damage to each, plus 370/555/890 (AP) magic damage split between all enemies hit.
+
+Hacked enemies store 10% of all damage they take. When the Hack ends, they take true damage equal to the stored damage. The Hack ends early if it would kill the target.
+Damage: 80/120/190 AP
+Split Damage: 370/555/890 AP
+aurora stats:
+Health
+Mana700/1260/2268
+Mana
+Mana20/80
+Attack Damage
+Mana30/45/68
+Ability Power
+Mana100
+Armor
+Mana25
+Magic Resist
+Mana25
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Illaoi
+Illaoi
+Magic Tank
+AnimaAnima
+VanguardVanguard
+ShepherdShepherd
+Gold3
+Test of Spirit
+Test of Spirit
+Mana40/100
+Gain 450/525/650 (AP) Shield for 3 seconds. Over the duration, drain 55/85/130 (AP) Health from the nearest 3 enemies. Then slam down, dealing 80/120/180 (AP) magic damage to all enemies within 2 hexes.
+Shield: 450/525/650
+Health Drain: 55/85/130 (AP)
+Damage: 80/120/180 (AP)
+illaoi:
+Health
+Mana1100/1980/3564
+Mana
+Mana40/100
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana50
+Magic Resist
+Mana50
+Attack Speed
+Mana0.65
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Kai'Sa
+Kai'Sa
+Attack Caster
+Dark StarDark Star
+RogueRogue
+Gold3
+Bullet Cluster
+Bullet Cluster
+Mana0/50
+Passive: On takedown, gain 10 mana.
+
+Active: Fire 16 missiles in a 2-hex radius around the current target, dealing 35/53/84 (AD) physical damage each.
+Damage: 35/53/84
+32/48/77 (AD)
++
+3/5/7 (AP)
+kai'sa stats:
+Health
+Mana650/1170/2106
+Mana
+Mana0/50
+Attack Damage
+Mana45/68/101
+Ability Power
+Mana100
+Armor
+Mana25
+Magic Resist
+Mana25
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Maokai
+Maokai
+Magic Tank
+N.O.V.A.N.O.V.A.
+BrawlerBrawler
+Gold3
+Grasp of Convergence
+Grasp of Convergence
+Mana30/100
+Passive: Gain 50% more max Health from all sources.
+
+Active: Converge an X-shape of vines on the target, dealing 100/150/225 (AP) magic damage to each enemy hit and Stunning them for 1.5/1.5/1.75 seconds.
+
+N.O.V.A. Strike: Send forth a wave of dragons that stun all enemies for 1.5/1.5/1.75 seconds. For the rest of combat, Maokai's attacks deal 88/158/285 (Health) bonus physical damage.
+Damage: 100/150/225 (AP)
+Stun Duration:1.5/1.5/1.75
+N.O.V.A. Stun Duration:
+1.5/1.5/1.75
+N.O.V.A. Damage: 88/158/285
+8% (Health)
+maokai stats:
+Health
+Mana1100/1980/3564
+Mana
+Mana30/100
+Attack Damage
+Mana60/90/135
+Ability Power
+Mana100
+Armor
+Mana40
+Magic Resist
+Mana40
+Attack Speed
+Mana0.6
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Ornn
+Ornn
+Magic Tank
+Space GrooveSpace Groove
+BastionBastion
+Gold3
+Disco Inferno
+Disco Inferno
+Mana40/100
+Passive: On combat start, forge a temporary completed item. If 3 items are already equipped, a random completed item becomes Radiant this combat instead. // can be just a hp increase
+
+Active: Gain 100/150/500 (AP) Shield for 3 seconds, then breath fire in a cone dealing 180/270/430 (AP) magic damage. After any Shield on Ornn expires, Ornn enters The Groove for 3 seconds.
+Shield: 100/150/500 (AP)
+Damage: 180/270/430 (AP)
+Ornn stats:
+Health
+Mana850/1530/2754
+Mana
+Mana40/100
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana40
+Magic Resist
+Mana40
+Attack Speed
+Mana0.65
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Samira
+Samira
+Attack Caster
+Space GrooveSpace Groove
+SniperSniper
+Gold3
+Jump and Jive
+Jump and Jive
+Mana0/60
+Passive: Whenever an enemy is knocked up, shoot them, dealing 65/95/155 (ADAP) physical damage and entering The Groove for 3 seconds.// can be just a bigger auto attack damage (not 100% of this passive damage)
+
+Active: Unleash a volley of bullets at the target, dealing 360/540/860 (AD) physical damage and knocking up for 1.25 seconds.
+Passive Damage: AP10/15/25
+Passive Damage: 65/95/155
+55/80/130 (AD)
++
+10/15/25 (AP)
+Damage: 360/540/860 (AD)
+samira stats:
+Health
+Mana650/1170/2106
+Mana
+Mana0/60
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana25
+Magic Resist
+Mana25
+Attack Speed
+Mana0.75
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana6
+
+Akali
+Akali
+Attack Fighter
+N.O.V.A.N.O.V.A.
+MarauderMarauder
+Gold2
+Star Strike
+Star Strike
+Mana0/30
+Reposition next to the target to strike the most enemies. Then throw 5 piercing kunai, each dealing 38/56/89 (AD) physical damage to the first enemy hit, reduced to 15/22/36 (AD) for each subsequent target. Kunai remove 1 Armor, 2 if they crit.
+
+N.O.V.A. Strike: Slice all enemies, applying Wound and a bleed that deals 10/14/18 (AD) physical damage each second. Kunai increase the damage of the bleed by 10%.
+Damage: AP4/6/9
+Damage: 38/56/89 (AD)
+34/50/80
+AD +
+4/6/9
+AP
+Secondary Damage: 15/22/36
+40% of
+38/56/89 (AD)
+N.O.V.A. Damage: 10/14/18 (AD)
+akali stats:
+Health
+Mana750/1350/2430
+Mana
+Mana0/30
+Attack Damage
+Mana45/68/101
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.8
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Gwen
+Gwen
+Magic Assassin
+Space GrooveSpace Groove
+RogueRogue
+Gold2
+Dance n' Dice
+Dance n' Dice
+Mana0/30
+Passive: Attacks deal magic damage. Gwen is in The Groove while targeting an enemy below 40% Health.
+
+Active: Dash to a nearby hex to snip the lowest percent Health enemy, dealing 145/220/380 (AP) magic damage to the target and 75/110/190 (AP) magic damage to enemies in a cone. If this kills, dash and snip again at 65% damage!
+Damage: 145/220/380 (AP)
+Area Damage: 75/110/190 (AP)
+gwen stats:
+Health
+Mana750/1350/2430
+Mana
+Mana0/30
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.85
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana2
+
+Jinx
+Jinx
+Attack Marksman
+AnimaAnima
+ChallengerChallenger
+Gold2
+Explosive Attitude
+Explosive Attitude
+Mana20/80
+Fire a barrage of 16 (AS) rockets in a cone, each dealing 32/49/72 (AD) physical damage to the first target hit.
+Rockets: 16 + 1 per 35% AS
+Damage %i:scaleAP%3/5/7
+Damage: 32/49/72
+29/44/65 AD + 3/5/7 AP
+jinx stats:
+Health
+Mana550/990/1782
+Mana
+Mana20/80
+Attack Damage
+Mana55/83/124
+Ability Power
+Mana100
+Armor
+Mana20
+Magic Resist
+Mana20
+Attack Speed
+Mana0.75
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Milio
+Milio
+Magic Caster
+TimebreakerTimebreaker
+FateweaverFateweaver
+Gold2
+Mega Time Kick
+Mega Time Kick
+Mana0/30
+Kick a ball at the current target that deals 255/380/575 (AP) magic damage. On impact, the ball has a 100% Lucky chance to bounce to a new target dealing 85/130/190 (AP) magic damage. These bounces can trigger additional bounces, but the odds halve with each bounce.
+
+Lucky: Check twice and take the better outcome.
+Damage: 255/380/575 (AP)
+Bounce Damage: 85/130/190 (AP)
+milio stats:
+Health
+Mana550/990/1782
+Mana
+Mana0/30
+Attack Damage
+Mana30/45/68
+Ability Power
+Mana100
+Armor
+Mana20
+Magic Resist
+Mana20
+Attack Speed
+Mana0.7
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Mordekaiser
+Mordekaiser
+Magic Tank
+Dark StarDark Star
+ConduitConduit
+VanguardVanguard
+Gold2
+Ability:
+Indestructible
+Indestructible
+Mana40/100
+Gain 300/375/500 (AP) Shield. Each second for the next 4 seconds, gain 75/90/105 (AP) more Shield and deal 45/70/100 (AP) magic damage to adjacent enemies. When this ability ends, consume the remaining Shield and heal for 40% of its value.
+Initial Shield: 300/375/500 (AP)
+Channel Shield: 75/90/105 (AP)
+Channel Damage: 45/70/100 (AP)
+mordekaiser stats:
+Health
+Mana950/1710/3078
+Mana
+Mana40/100
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.6
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Pantheon
+Pantheon
+Attack Tank
+TimebreakerTimebreaker
+BrawlerBrawler
+ReplicatorReplicator
+Gold2
+Advanced Defences
+Advanced Defences
+Mana20/80
+Gain 54/97/175 (HealthAP) Shield and 15% Durability for 4 seconds. Over the duration, deal 30/45/70 (AD) physical damage each second to enemies in a cone.
+Shield: 54/97/175
+6% Health +
+275/300/500 (AP)
+Damage Per Second: 30/45/70 (AD)
+Pantheon stats:
+Health
+Mana900/1620/2916
+Mana
+Mana20/80
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.6
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Aatrox
+Aatrox
+Attack Tank
+N.O.V.A.N.O.V.A.
+BastionBastion
+Gold1
+Ability:
+Stellar Slash
+Stellar Slash
+Mana30/90
+Heal 375/575 (AP), then deal 242/362 (ADArmor) physical damage to the current target.
+
+N.O.V.A. Strike: Cleave the battlefield, briefly knocking up all enemies and dealing 121/181 (ADArmor) physical damage.
+Heal: 375/575 (AP)
+Damage: Armor270/405%
+Damage: 242/362
+120/180
+AD +
+270/405%
+Armor
+N.O.V.A. Damage: 121/181
+50% of
+242/362 (ADArmor)
+aatrox stats:
+Health
+Mana700/1260/2268
+Mana
+Mana30/90
+Attack Damage
+Mana50/75/113
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.6
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Briar
+Briar
+Attack Fighter
+AnimaAnima 
+PrimordianPrimordian //ignore primordian
+RogueRogue
+Gold1
+Fish Frenzy
+Fish Frenzy
+Mana0/40
+Passive: For every 1% missing Health, gain 2/2/2.5% (AP) Attack Speed
+
+Active: Deal 130/195/320 (AD) physical damage to the target, increased by 50% if they're a tank.
+Attack Speed: AP2/2/2.5
+Damage: 130/195/320 (AD)
+Bonus Tank Damage
+50% of
+130/195/320 (AD)
+briar stats:
+Health
+Mana650/1170/2106
+Mana
+Mana0/40
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana35
+Magic Resist
+Mana35
+Attack Speed
+Mana0.75
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Caitlyn
+Caitlyn
+Attack Specialist
+N.O.V.A.N.O.V.A.
+FateweaverFateweaver
+Gold1
+Aim For The Head
+Aim For The Head
+Mana0/0
+Passive: Attacks have a 15% Lucky chance to fire an empowered Headshot, dealing 190/285/555 (ADAP) physical damage.
+
+N.O.V.A. Strike: Mark all enemies, increasing damage taken by 10%. The first time marked targets drop below 50% Health, Headshot them for 76/114/222 (ADAP) physical damage.
+
+Lucky: Check twice and take the better outcome.
+Headshot Damage: AP20/30/45
+Headshot Damage: 190/285/555
+170/255/510 AD
++
+20/30/45 AP
+N.O.V.A. Damage: 76/114/222
+40% of
+190/285/555 (ADAP)
+Caitlyn stats:
+Health
+Mana650/1170/2106
+Mana
+Mana0/40
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana35
+Magic Resist
+Mana35
+Attack Speed
+Mana0.75
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Cho'Gath
+Cho'Gath
+Magic Tank
+Dark StarDark Star
+BrawlerBrawler
+Gold1
+Accretion
+Accretion
+Mana30/70
+Deal 266/391/601 (HealthAP)  magic damage to the lowest Health enemy in range and permanently gain 12/18/33 maximum Health. If this kills them, permanently gain 30/40/70 maximum Health instead.
+
+(Current Bonus: +X Health)
+Health Per Cast: 12/18/33
+Health On Kill: 30/40/70
+Damage: 266/391/601
+8% Health +
+210/290/420%
+AP
+chogath stats:
+Health
+Mana700/1260/2268
+Mana
+Mana30/70
+Attack Damage
+Mana45/68/101
+Ability Power
+Mana100
+Armor
+Mana40
+Magic Resist
+Mana40
+Attack Speed
+Mana0.6
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1
+
+Ezreal
+Ezreal
+Attack Caster
+TimebreakerTimebreaker
+SniperSniper
+Gold1
+Temporal Shot
+Temporal Shot
+Mana0/30
+Active: Fire a blast at the current target that deals 174/261/397 (ADAP) physical damage. Every 8 takedowns, gain a drone that deals 8/12/18 (AD) physical damage to the current target on cast.
+(Total Takedowns: X)
+Damage: AP14/21/32
+Damage: 174/261/397
+160/240/365 (AD)
++
+14/21/32 (AP)
+Drone Damage: 8/12/18 (AD)
+ezreal stats:
+Health
+Mana450/810/1458
+Mana
+Mana0/30
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana15
+Magic Resist
+Mana15
+Attack Speed
+Mana0.7
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana6
+
+Lissandra
+Lissandra
+Magic Caster
+Dark StarDark Star
+ShepherdShepherd
+ReplicatorReplicator
+Gold1
+Dark Matter
+Dark Matter
+Mana0/30
+Hurl a shard towards the current target, dealing 250/375/600 (AP) magic damage to the first target it hits. After hitting its initial target or at its final destination, the dagger explodes dealing 50/75/115 (AP) magic damage to nearby targets.
+Damage: 250/375/600 (AP)
+Secondary Damage: 50/75/115 (AP)
+lissandra stats:
+Health
+Mana450/810/1458
+Mana
+Mana0/30
+Attack Damage
+Mana30/45/68
+Ability Power
+Mana100
+Armor
+Mana15
+Magic Resist
+Mana15
+Attack Speed
+Mana0.7
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana4
+
+Nasus
+Nasus
+Magic Tank
+Space GrooveSpace Groove
+VanguardVanguard
+Gold1
+Ability:
+Groovin' Susan
+Groovin' Susan
+Mana60/120
+Transform for 6 seconds, temporarily gaining 250/350/550 max Health, entering The Groove, and dealing 44/70/115 (HealthAP) magic damage to adjacent enemies each second.
+Bonus Health250/350/550
+Damage: 44/70/115
+2% max Health
++
+30/45/70 AP
+nasus stats:
+Health
+Mana700/1260/2268
+Mana
+Mana60/120
+Attack Damage
+Mana40/60/90
+Ability Power
+Mana100
+Armor
+Mana45
+Magic Resist
+Mana45
+Attack Speed
+Mana0.65
+Crit Chance
+Mana25%
+Crit Damage
+Mana140%
+Range
+Mana1

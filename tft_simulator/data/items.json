@@ -1,0 +1,207 @@
+{
+  "Adaptive Helm": {
+    "mr": 20.0,
+    "manaRegenPercent": 0.03,
+    "passives": ["adaptive_helm_bonus"]
+  },
+  "Archangel's Staff": {
+    "ap": 30.0,
+    "manaRegenPercent": 0.01,
+    "passives": ["archangel_scaling"]
+  },
+  "Bloodthirster": {
+    "adPercent": 0.15,
+    "ap": 15.0,
+    "mr": 20.0,
+    "omnivamp": 0.20,
+    "passives": ["bloodthirster_shield"]
+  },
+  "Blue Buff": {
+    "adPercent": 0.15,
+    "ap": 15.0,
+    "manaRegenPercent": 0.05,
+    "passives": ["blue_buff_bonus"]
+  },
+  "Bramble Vest": {
+    "armor": 50.0,
+    "hpPercent": 0.06,
+    "passives": ["bramble_damage_reduction", "bramble_thorns"]
+  },
+  "Crownguard": {
+    "ap": 20.0,
+    "armor": 20.0,
+    "hp": 100.0,
+    "passives": ["crownguard_shield"]
+  },
+  "Deathblade": {
+    "adPercent": 0.55,
+    "damageAmp": 0.10,
+    "passives": []
+  },
+  "Dragon's Claw": {
+    "mr": 60.0,
+    "hpPercent": 0.06,
+    "passives": ["dragon_claw_regen"]
+  },
+  "Edge of Night": {
+    "adPercent": 0.10,
+    "asPercent": 0.15,
+    "ap": 10.0,
+    "armor": 20.0,
+    "passives": ["edge_of_night_stealth"]
+  },
+  "Evenshroud": {
+    "mr": 20.0,
+    "hp": 250.0,
+    "passives": ["evenshroud_sunder", "evenshroud_stats"]
+  },
+  "Gargoyle Stoneplate": {
+    "armor": 25.0,
+    "mr": 25.0,
+    "hp": 100.0,
+    "passives": ["gargoyle_stoneplate_scaling"]
+  },
+  "Giant Slayer": {
+    "adPercent": 0.15,
+    "asPercent": 0.15,
+    "ap": 15.0,
+    "damageAmp": 0.15,
+    "passives": ["giant_slayer_bonus"]
+  },
+  "Guinsoo's Rageblade": {
+    "asPercent": 0.10,
+    "ap": 10.0,
+    "passives": ["guinsoo_stacking"]
+  },
+  "Hand Of Justice": {
+    "critChance": 0.20,
+    "manaRegenPercent": 0.01,
+    "adPercent": 0.15,
+    "ap": 15.0,
+    "omnivamp": 0.12,
+    "passives": ["hoj_buff_doubler"]
+  },
+  "Hextech Gunblade": {
+    "adPercent": 0.20,
+    "ap": 20.0,
+    "omnivamp": 0.15,
+    "manaRegenPercent": 0.01,
+    "passives": ["hextech_gunblade_heal"]
+  },
+  "Infinity Edge": {
+    "adPercent": 0.35,
+    "critChance": 0.35,
+    "passives": ["infinity_edge_precision"]
+  },
+  "Ionic Spark": {
+    "ap": 15.0,
+    "mr": 35.0,
+    "hp": 250.0,
+    "passives": ["ionic_spark_shred", "ionic_spark_zap"]
+  },
+  "Jeweled Gauntlet": {
+    "ap": 35.0,
+    "critChance": 0.35,
+    "passives": ["jeweled_gauntlet_precision"]
+  },
+  "Kraken's Fury": {
+    "adPercent": 0.10,
+    "asPercent": 0.10,
+    "mr": 20.0,
+    "passives": ["krakens_fury_stacking"]
+  },
+  "Last Whisper": {
+    "adPercent": 0.15,
+    "asPercent": 0.20,
+    "critChance": 0.20,
+    "passives": ["last_whisper_sunder"]
+  },
+  "Morellonomicon": {
+    "ap": 20.0,
+    "hp": 150.0,
+    "manaRegenPercent": 0.01,
+    "passives": ["morello_burn_wound"]
+  },
+  "Nashor's Tooth": {
+    "asPercent": 0.10,
+    "ap": 15.0,
+    "hp": 150.0,
+    "critChance": 0.20,
+    "passives": ["nashors_tooth_mana"]
+  },
+  "Protector's Vow": {
+    "armor": 25.0,
+    "mr": 25.0,
+    "manaRegenPercent": 0.01,
+    "passives": ["protectors_vow_start", "protectors_vow_shield"]
+  },
+  "Quicksilver": {
+    "asPercent": 0.15,
+    "mr": 20.0,
+    "critChance": 0.20,
+    "passives": ["quicksilver_cc_immunity", "quicksilver_as_stacking"]
+  },
+  "Rabadon's Deathcap": {
+    "ap": 55.0,
+    "damageAmp": 0.15,
+    "passives": []
+  },
+  "Red Buff": {
+    "asPercent": 0.45,
+    "damageAmp": 0.06,
+    "passives": ["red_buff_burn_wound"]
+  },
+  "Spear of Shojin": {
+    "adPercent": 0.15,
+    "ap": 15.0,
+    "manaRegenPercent": 0.01,
+    "passives": ["shojin_mana_on_attack"]
+  },
+  "Spirit Visage": {
+    "hp": 300.0,
+    "durability": 0.08,
+    "manaRegenPercent": 0.02,
+    "passives": ["spirit_visage_regen"]
+  },
+  "Steadfast Heart": {
+    "armor": 20.0,
+    "hp": 250.0,
+    "critChance": 0.20,
+    "durability": 0.05,
+    "passives": ["steadfast_heart_durability"]
+  },
+  "Sterak's Gage": {
+    "adPercent": 0.45,
+    "hp": 300.0,
+    "passives": ["steraks_gage_shield"]
+  },
+  "Striker's Flail": {
+    "asPercent": 0.10,
+    "hp": 150.0,
+    "critChance": 0.20,
+    "damageAmp": 0.10,
+    "passives": ["strikers_flail_amp_stack"]
+  },
+  "Sunfire Cape": {
+    "armor": 20.0,
+    "hp": 150.0,
+    "hpPercent": 0.08,
+    "passives": ["sunfire_cape_burn"]
+  },
+  "Titan's Resolve": {
+    "asPercent": 0.10,
+    "armor": 20.0,
+    "passives": ["titans_resolve_stacking"]
+  },
+  "Void Staff": {
+    "asPercent": 0.15,
+    "ap": 35.0,
+    "manaRegenPercent": 0.01,
+    "passives": ["void_staff_shred"]
+  },
+  "Warmog's Armor": {
+    "hp": 500.0,
+    "hpPercent": 0.18,
+    "passives": []
+  }
+}
