@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath("build"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "build", "Release"))
 import tft_engine as tft
 
 def test_in_combat_traits():

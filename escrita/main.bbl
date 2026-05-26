@@ -1,0 +1,47 @@
+\begin{thebibliography}{}
+
+\bibitem[Brockman et~al. 2016]{brockman2016}
+Brockman, G. et~al. (2016).
+\newblock {OpenAI Gym}.
+
+\bibitem[Goldberg 1989]{goldberg1989}
+Goldberg, D.~E. (1989).
+\newblock {\em Genetic Algorithms in Search, Optimization, and Machine
+  Learning}.
+\newblock Addison-Wesley, Reading.
+
+\bibitem[Henkel 2019]{henkel2019}
+Henkel, R. (2019).
+\newblock Teamfight tactics has more than 33 million players per month.
+\newblock ONE Esports.
+
+\bibitem[Holland 1975]{holland1975}
+Holland, J.~H. (1975).
+\newblock {\em Adaptation in Natural and Artificial Systems}.
+\newblock University of Michigan Press, Ann Arbor.
+
+\bibitem[Liu 2022]{liu2022}
+Liu, D. (2022).
+\newblock Computer knows best: A computational approach to positioning in
+  teamfight tactics.
+
+\bibitem[Mnih et~al. 2015]{mnih2015}
+Mnih, V. et~al. (2015).
+\newblock Human-level control through deep reinforcement learning.
+\newblock {\em Nature}, 518(7540):529--533.
+
+\bibitem[Schulman et~al. 2017]{schulman2017}
+Schulman, J. et~al. (2017).
+\newblock Proximal policy optimization algorithms.
+
+\bibitem[Sutton and Barto 2018]{sutton2018}
+Sutton, R.~S. and Barto, A.~G. (2018).
+\newblock {\em Reinforcement Learning: An Introduction}.
+\newblock The MIT Press, Cambridge, 2 edition.
+
+\bibitem[Zhang 2024]{zhang2024}
+Zhang, W. (2024).
+\newblock Design and implementation of an intelligent agent for auto battler
+  games using reinforcement learning.
+
+\end{thebibliography}
