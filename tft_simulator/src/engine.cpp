@@ -33,7 +33,9 @@ PYBIND11_MODULE(tft_engine, m)
         .def("moveBenchToBoard", &Player::moveBenchToBoard)
         .def("moveBoardToBench", &Player::moveBoardToBench)
         .def("getBenchChampion", &Player::getBenchChampion, py::return_value_policy::reference)
-        .def("checkAutoCombine", &Player::checkAutoCombine);
+        .def("checkAutoCombine", &Player::checkAutoCombine)
+        .def("getBench", &Player::getBench, py::return_value_policy::reference)
+        .def("moveBoardToBoard", &Player::moveBoardToBoard);
 
     py::class_<Match>(m, "Match")
         .def(py::init<>())

@@ -1,80 +1,74 @@
 import sys
 import os
+import json
+import random
+import time
 
-sys.path.append(os.path.abspath("build"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "build"))
+
+from envs.tft_env import TFTEnvironment
+from agents.heuristic_agent import HeuristicAgent
 import tft_engine as tft
 
-def main():
+def load_champions_data():
     json_path = os.path.join(os.path.dirname(__file__), "data", "toy_set.json")
-    champions_db = tft.loadChampionsFromJson(json_path)
+    with open(json_path, 'r', encoding='utf-8') as f:
+        py_dict = json.load(f)
+    cpp_db = tft.loadChampionsFromJson(json_path)
+    return py_dict, cpp_db
+
+def run_heuristic_test():
+    print("--- INICIANDO TESTE: HEURÍSTICA VS ALEATÓRIOS ---")
     
-    lobby = tft.Lobby(champions_db)
-    motor = tft.CombatEngine()
+    py_dict, cpp_db = load_champions_data()
+    env = TFTEnvironment(py_dict, cpp_db, num_players=8)
     
-    # Pegando o Jogador 0, seu tabuleiro e a Pool Global
-    p0 = lobby.getPlayer(0)
-    p0_board = lobby.getBoard(0)
-    pool = lobby.getPool()
+    heuristic = HeuristicAgent(py_dict)
     
-    print("\n================================================")
-    print("TESTE DE IA: ECONOMIA, RESERVAS E AUTO-COMBINE")
-    print("================================================\n")
+    observations = env.reset()
+    episodio_encerrado = False
+    turnos_jogados = 0
+    last_stage = env.current_stage
+    last_round = env.current_round
     
-    # Dando ouro para o Jogador 0 poder brincar
-    p0.addGold(50)
-    print(f"-> Jogador 0 recebeu ouro. Saldo: {p0.getGold()}")
-    
-    # Comprando 3 Aatrox (Custo 1) do nosso novo banco de dados
-    print("-> Jogador 0 comprou 3x 'Aatrox' da loja...")
-    p0.buyChampion("Aatrox", 1, pool, champions_db)
-    p0.buyChampion("Aatrox", 1, pool, champions_db)
-    p0.buyChampion("Aatrox", 1, pool, champions_db)
-    
-    print("\n[BANCADA ANTES DA FUSÃO]")
-    for i in range(9):
-        c = p0.getBenchChampion(i)
-        if c:
-            print(f"Slot {i}: {c.getName()} ({c.getStarLevel()} Estrelas)")
+    start_time = time.time()
+
+    while not episodio_encerrado:
+        actions = []
+        for i in range(8):
+            if env.alive_status[i]:
+                if i == 0:
+                    actions.append(heuristic.get_action(i, env))
+                else:
+                    if random.random() < 0.10:
+                        actions.append(0)
+                    else:
+                        actions.append(random.randint(1, 1080))
+            else:
+                actions.append(0)
+        
+        observations, rewards, dones, info = env.step(actions)
+        turnos_jogados += 1
+        
+        if env.current_round != last_round or env.current_stage != last_stage:
+            last_stage = env.current_stage
+            last_round = env.current_round
+        
+        if all(dones) or sum(1 for alive in env.alive_status if alive) <= 1:
+            episodio_encerrado = True
             
-    # Chamando a verificação de fusão (Auto-Combine)
-    print("\n-> Sistema de Auto-Combine acionado...")
-    p0.checkAutoCombine(p0_board)
+        if env.current_stage >= 6:
+            episodio_encerrado = True
+
+    end_time = time.time()
     
-    print("\n[BANCADA APÓS A FUSÃO]")
-    for i in range(9):
-        c = p0.getBenchChampion(i)
-        if c:
-            print(f"Slot {i}: {c.getName()} ({c.getStarLevel()} Estrelas)")
-            
-    # Movendo o Aatrox 2 Estrelas (que está no Slot 0) para o tabuleiro
-    print("\n-> Movendo o Aatrox Prata do Slot 0 para o Tabuleiro (X=3, Y=0)...")
-    sucesso = p0.moveBenchToBoard(0, 3, 0, p0_board)
-    if sucesso:
-        print("Peça posicionada com sucesso!")
-        
-    # Distribuindo Cho'Gaths para os outros jogadores apanharem do Aatrox 2 estrelas
-    for i in range(1, 8):
-        # Alterado de Sett para Cho'Gath
-        lobby.getBoard(i).placeChampion(3, 0, champions_db["Cho'Gath"], 1)
-        
-    print("\n================================================")
-    print("INICIANDO A SIMULAÇÃO ATÉ O ESTÁGIO 2-7")
-    print("================================================\n")
+    print("\n--- PARTIDA ENCERRADA ---")
+    print(f"Tempo de simulação: {(end_time - start_time):.4f} segundos")
     
-    match = lobby.getMatchTracker()
-    
-    # Loop que roda até o Estágio 3 começar
-    while match.getStage() < 3:
-        lobby.playRound(motor)
-        
-        # Quebra o loop no final do estágio 2
-        if match.getStage() == 2 and match.getRound() == 7:
-            print("\n--- STATUS DO LOBBY FIM DO ESTÁGIO 2 ---")
-            for i in range(8):
-                if lobby.getIsAlive(i):
-                    print(f"Jogador {i} | HP: {lobby.getPlayer(i).getHp()} | Ouro: {lobby.getPlayer(i).getGold()}")
-            print("=======================================\n")
-            break
+    print("\nRanking de Sobrevivência (HP Final):")
+    for i, player in enumerate(env.players):
+        tipo = "Heurística (Dark Star)" if i == 0 else "Aleatório"
+        print(f"Jogador {i} [{tipo}]: {max(0, player.getHp())} HP | Nível {player.getLevel()} | Ouro: {player.getGold()}")
 
 if __name__ == "__main__":
-    main()
+    run_heuristic_test()

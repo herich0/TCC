@@ -38,9 +38,11 @@ public:
     void sellChampionFromBench(int benchIndex, GlobalPool& pool);
     bool moveBenchToBoard(int benchIndex, int boardX, int boardY, Board& board);
     bool moveBoardToBench(int boardX, int boardY, Board& board);
+    bool moveBoardToBoard(int fromX, int fromY, int toX, int toY, Board& board, int teamId = 1);    
     
     Champion* getBenchChampion(int index);
     void checkAutoCombine(Board& board);
+    std::vector<Champion*> getBench() const;
 };
 
 #endif

@@ -1,4 +1,7 @@
+linux
 cd build
 make
 cd ..
-python3 test_items.py
+
+windows
+cmake --build . --config Release

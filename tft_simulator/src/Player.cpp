@@ -23,11 +23,21 @@ void Player::buyXp() {
     if (gold >= 4) { 
         gold -= 4; 
         xp += 4; 
+        
+        int xpTable[] = {0, 0, 2, 6, 10, 20, 36, 56, 80, 124, 9999};
+        while (level < 10 && xp >= xpTable[level + 1]) {
+            level++;
+        }
     } 
 }
 
 void Player::addNaturalXp() { 
     xp += 2; 
+    
+    int xpTable[] = {0, 0, 2, 6, 10, 20, 36, 56, 80, 124, 9999};
+    while (level < 10 && xp >= xpTable[level + 1]) {
+        level++;
+    }
 }
 
 void Player::takeDamage(int amount) { hp -= amount; }
@@ -159,4 +169,44 @@ void Player::checkAutoCombine(Board& board) {
     if (combined) {
         checkAutoCombine(board);
     }
+}
+
+std::vector<Champion*> Player::getBench() const {
+    return std::vector<Champion*>(std::begin(bench), std::end(bench));
+}
+
+bool Player::moveBoardToBoard(int fromX, int fromY, int toX, int toY, Board& board, int teamId) {
+    if (fromX < 0 || fromX >= 7 || fromY < 0 || fromY >= 4 ||
+        toX < 0 || toX >= 7 || toY < 0 || toY >= 4) {
+        return false;
+    }
+
+    Champion* c = board.getChampion(fromX, fromY);
+    if (!c || board.getTeam(fromX, fromY) != teamId) {
+        return false;
+    }
+
+    if (board.isOccupied(toX, toY)) {
+        Champion* target = board.getChampion(toX, toY);
+        if (target && board.getTeam(toX, toY) == teamId) {
+            Champion tempC(*c);
+            Champion tempTarget(*target);
+            int star1 = tempC.getStarLevel();
+            int star2 = tempTarget.getStarLevel();
+            
+            board.removeChampion(fromX, fromY);
+            board.removeChampion(toX, toY);
+            
+            board.placeChampion(toX, toY, tempC, teamId, star1);
+            board.placeChampion(fromX, fromY, tempTarget, teamId, star2);
+            return true;
+        }
+        return false;
+    }
+
+    Champion tempC(*c);
+    int star = tempC.getStarLevel();
+    board.removeChampion(fromX, fromY);
+    board.placeChampion(toX, toY, tempC, teamId, star);
+    return true;
 }
