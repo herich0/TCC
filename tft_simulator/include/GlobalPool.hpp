@@ -15,6 +15,7 @@ public:
     std::string drawChampion(int cost);
     void returnChampion(const std::string& name, int cost);
     int getAvailableCount(const std::string& name) const;
+    bool takeChampion(std::string name);
 };
 
 #endif

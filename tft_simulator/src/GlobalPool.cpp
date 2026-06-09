@@ -46,3 +46,15 @@ int GlobalPool::getAvailableCount(const std::string& name) const {
     }
     return count;
 }
+
+bool GlobalPool::takeChampion(std::string name) {
+    for (auto& pair : pool) {
+        auto& champList = pair.second;
+        auto it = std::find(champList.begin(), champList.end(), name);
+        if (it != champList.end()) {
+            champList.erase(it);
+            return true;
+        }
+    }
+    return false;
+}

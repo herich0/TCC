@@ -23,9 +23,7 @@ def simulate_lobby(agent_genes_list, py_dict, json_path):
     from envs.genetic_agent import GeneticAgent
     
     cpp_db = tft.loadChampionsFromJson(json_path)
-    
     env = TFTEnvironment(py_dict, cpp_db, num_players=8)
-    
     agents = [GeneticAgent(py_dict, genes) for genes in agent_genes_list]
     
     env.reset()
@@ -51,14 +49,69 @@ def simulate_lobby(agent_genes_list, py_dict, json_path):
         
     return scores
 
+def run_exhibition_match(genes, py_dict, json_path):
+    import tft_engine as tft
+    from envs.tft_env import TFTEnvironment
+    from envs.genetic_agent import GeneticAgent
+    
+    cpp_db = tft.loadChampionsFromJson(json_path)
+    env = TFTEnvironment(py_dict, cpp_db, num_players=8)
+    agents = [GeneticAgent(py_dict, genes) for _ in range(8)]
+    
+    env.reset()
+    episodio_encerrado = False
+    
+    while not episodio_encerrado:
+        actions = []
+        for i in range(8):
+            if env.alive_status[i]:
+                actions.append(agents[i].get_action(i, env))
+            else:
+                actions.append(0)
+        
+        env.step(actions)
+        
+        if sum(1 for alive in env.alive_status if alive) <= 1 or env.current_stage >= 8:
+            episodio_encerrado = True
+
+    print("\n--- RADIOGRAFIA DO LOBBY VENCEDOR ---")
+    print(f"Duração: Estágio {env.current_stage}-{env.current_round}")
+    
+    players_data = []
+    for i, p in enumerate(env.players):
+        hp = max(0, p.getHp())
+        lvl = p.getLevel()
+        gold = p.getGold()
+        
+        board = env.boards[i]
+        units = []
+        for y in range(4):
+            for x in range(7):
+                champ = board.getChampion(x, y)
+                if champ:
+                    units.append(f"{champ.getName()}({champ.getStarLevel()}*)")
+        
+        players_data.append({
+            'id': i, 'hp': hp, 'lvl': lvl, 'gold': gold, 'units': units
+        })
+        
+    players_data.sort(key=lambda x: (x['hp'], x['lvl']), reverse=True)
+    
+    for rank, data in enumerate(players_data):
+        status = "VIVO" if data['hp'] > 0 else "MORTO"
+        print(f"#{rank+1} - Jogador {data['id']} [{status}]: {data['hp']} HP | Lvl {data['lvl']} | {data['gold']} Gold")
+        board_str = ", ".join(data['units']) if data['units'] else "Nenhuma unidade"
+        print(f"    Tabuleiro: {board_str}")
+    print("---------------------------------------\n")
+
 def run_training():
     print("--- INICIANDO TREINAMENTO DO ALGORITMO GENÉTICO ---")
     
     py_dict, json_path = load_champions_data()
     
-    POP_SIZE = 24
-    GENERATIONS = 10
-    MATCHES_PER_GEN = 10
+    POP_SIZE = 320
+    GENERATIONS = 20
+    MATCHES_PER_GEN = 30 
     
     manager = PopulationManager(py_dict, pop_size=POP_SIZE, mutation_rate=0.08, sigma=0.1)
     
@@ -67,7 +120,6 @@ def run_training():
         print(f"\n[Geração {gen}/{GENERATIONS}] Simulando partidas...")
         
         fitness_scores = [0.0] * POP_SIZE
-        
         lobbies_to_run = []
         indices_mapping = []
         
@@ -99,6 +151,8 @@ def run_training():
         print(f"-> Score Médio: {avg_score:.1f} | Melhor Score: {fitness_scores[best_idx]:.1f}")
         print(f"-> GENOMA DO CAMPEÃO:")
         print(f"   Economia: Guarda {best_agent.genes['min_gold']:.0f} Gold | Pânico: {best_agent.genes['hp_panic_threshold']:.0f} HP | Alvo Estrelas: {best_agent.genes['target_basl']:.2f}")
+        if gen ==10:
+            run_exhibition_match(best_agent.genes, py_dict, json_path)
         
         with open(os.path.join("data", "best_genetic_agent.json"), "w") as f:
             json.dump(best_agent.genes, f, indent=4)

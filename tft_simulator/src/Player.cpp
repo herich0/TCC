@@ -52,6 +52,10 @@ int Player::getStreak() const { return streak; }
 bool Player::buyChampion(std::string name, int cost, GlobalPool& pool, const std::map<std::string, Champion>& db) {
     if (gold < cost || name == "Empty") return false;
     
+    if (!pool.takeChampion(name)) {
+        return false; 
+    }
+    
     int emptySlot = -1;
     for (int i = 0; i < 9; ++i) {
         if (bench[i] == nullptr) {
@@ -68,6 +72,8 @@ bool Player::buyChampion(std::string name, int cost, GlobalPool& pool, const std
             return true;
         }
     }
+    
+    pool.returnChampion(name, cost);
     return false;
 }
 

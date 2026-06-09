@@ -15,8 +15,8 @@ class GeneticAgent:
         else:
             self.genes = {
                 "min_gold": random.uniform(0, 50),
-                "hp_panic_threshold": random.uniform(0, 40), # NOVO: Botão de Pânico (0 a 40 HP)
-                "target_basl": random.uniform(1.0, 3.0),     # NOVO: Alvo de Média de Estrelas
+                "hp_panic_threshold": random.uniform(0, 40), 
+                "target_basl": random.uniform(1.0, 3.0),    
                 "buy_threshold": random.uniform(0.5, 3.0),
                 "traits": {t: random.uniform(0, 1) for t in self.traits_list}
             }

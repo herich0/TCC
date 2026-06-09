@@ -106,7 +106,8 @@ PYBIND11_MODULE(tft_engine, m)
         .def(py::init<const std::map<std::string, Champion> &>())
         .def("drawChampion", &GlobalPool::drawChampion)
         .def("returnChampion", &GlobalPool::returnChampion)
-        .def("getAvailableCount", &GlobalPool::getAvailableCount);
+        .def("getAvailableCount", &GlobalPool::getAvailableCount)
+        .def("takeChampion", &GlobalPool::takeChampion);
 
     py::class_<Shop>(m, "Shop")
         .def(py::init<>())

@@ -19,14 +19,22 @@ class ActionDecoder:
             return "ROLL_SHOP"
 
         if 3 <= action_id <= 7:
-            shop_index = action_id - 3
-            champ_name = shop_array[shop_index]
-            if champ_name and champ_name != "Empty":
+            shop_idx = action_id - 3
+            champ_name = shop_array[shop_idx]
+            
+            if champ_name != "Empty":
+                # Removido o 'self.' do py_dict
                 cost = py_dict.get(champ_name, {}).get("cost", 1)
+                
                 success = player.buyChampion(champ_name, cost, global_pool, cpp_db)
+                
+                shop_array[shop_idx] = "Empty"
+                
                 if success:
-                    shop_array[shop_index] = "Empty"
-                return success
+                    player.checkAutoCombine(board)
+                    return True
+                else:
+                    return False
             return False
 
         if 8 <= action_id <= 16:
