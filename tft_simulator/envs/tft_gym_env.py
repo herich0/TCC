@@ -39,6 +39,7 @@ class TFTGymEnv(gym.Env):
         
         obs = self.env.reset()
         self.last_hp = 100
+        self.last_micro_tick = (self.env.current_stage * 10) + self.env.current_round
         
         info = {}
         return np.array(obs[0], dtype=np.float32), info
@@ -99,12 +100,15 @@ class TFTGymEnv(gym.Env):
         state = np.array(obs[0], dtype=np.float32)
         
         current_hp = player.getHp()
+        current_macro_tick = (self.env.current_stage * 10) + self.env.current_round
         
-        if action == 0 and current_hp == self.last_hp:
-            reward += 2.0
+        if current_macro_tick != self.last_macro_tick:
+            if current_hp == self.last_hp:
+                reward += 2.0 
+                
+            self.last_hp = current_hp
+            self.last_macro_tick = current_macro_tick
             
-        self.last_hp = current_hp
-        
         terminated = current_hp <= 0
         truncated = self.env.current_stage >= 8
         
