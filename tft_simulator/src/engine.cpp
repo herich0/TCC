@@ -35,7 +35,8 @@ PYBIND11_MODULE(tft_engine, m)
         .def("getBenchChampion", &Player::getBenchChampion, py::return_value_policy::reference)
         .def("checkAutoCombine", &Player::checkAutoCombine)
         .def("getBench", &Player::getBench, py::return_value_policy::reference)
-        .def("moveBoardToBoard", &Player::moveBoardToBoard);
+        .def("moveBoardToBoard", &Player::moveBoardToBoard)
+        .def("autoDeploy", &Player::autoDeploy);
 
     py::class_<Match>(m, "Match")
         .def(py::init<>())

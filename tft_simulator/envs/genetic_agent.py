@@ -21,6 +21,7 @@ class GeneticAgent:
                 "traits": {t: random.uniform(0, 1) for t in self.traits_list}
             }
         self.last_round = 0
+        self.sold_this_turn = False
         
     def _score_champ(self, champ_name):
         if champ_name == "Empty" or champ_name not in self.py_dict:
@@ -33,6 +34,7 @@ class GeneticAgent:
     def get_action(self, player_id, env):
         if env.current_round != self.last_round:
             self.last_round = env.current_round
+            self.sold_this_turn = False # Reseta a flag de venda no início do turno
 
         player = env.players[player_id]
         board = env.boards[player_id]
@@ -42,36 +44,48 @@ class GeneticAgent:
         hp = player.getHp()
         bench = player.getBench()
 
-        # 1. Compras na Loja
+        # 1. Compras na Loja (Prioridade)
         best_shop_idx = -1
         best_shop_score = -1.0
+        has_bench_space = any(c is None for c in bench)
         
-        for i, champ_name in enumerate(shop):
-            if champ_name != "Empty":
-                cost = self.py_dict.get(champ_name, {}).get("cost", 1)
-                if gold >= cost:
-                    score = self._score_champ(champ_name)
-                    if score >= self.genes["buy_threshold"] and score > best_shop_score:
-                        best_shop_score = score
-                        best_shop_idx = i
+        if has_bench_space:
+            for i, champ_name in enumerate(shop):
+                if champ_name != "Empty":
+                    cost = self.py_dict.get(champ_name, {}).get("cost", 1)
+                    if gold >= cost:
+                        score = self._score_champ(champ_name)
+                        if score >= self.genes["buy_threshold"] and score > best_shop_score:
+                            best_shop_score = score
+                            best_shop_idx = i
 
-        if best_shop_idx != -1:
-            has_bench_space = any(c is None for c in bench)
-            if not has_bench_space:
+            if best_shop_idx != -1:
+                return 3 + best_shop_idx # Ações 3 a 7 (Comprar)
+
+        # 2. Heurística de Poda Gulosa (Vender peças fracas para bater juros)
+        if not self.sold_this_turn:
+            current_interest_tier = gold // 10
+            if current_interest_tier < 5: # Se não está no teto de 50 gold
                 worst_bench_idx = -1
                 worst_bench_score = 999.0
+                
                 for i, c in enumerate(bench):
                     if c is not None:
-                        c_score = self._score_champ(c.getName())
-                        if c_score < worst_bench_score:
-                            worst_bench_score = c_score
+                        score = self._score_champ(c.getName())
+                        # Poda peças de 1 estrela que o AG não valoriza muito (score baixo)
+                        if score < worst_bench_score and c.getStarLevel() == 1:
+                            worst_bench_score = score
                             worst_bench_idx = i
-                if worst_bench_idx != -1 and worst_bench_score < best_shop_score:
-                    return 8 + worst_bench_idx 
-            else:
-                return 3 + best_shop_idx
+                
+                # Se achou uma peça ruim (< 0.5 de interesse do genoma)
+                if worst_bench_idx != -1 and worst_bench_score < 0.5:
+                    cost = bench[worst_bench_idx].getCost()
+                    # Vende SÓ SE for fazer o ouro pular pra próxima dezena
+                    if (gold + cost) // 10 > current_interest_tier:
+                        self.sold_this_turn = True
+                        return 8 + worst_bench_idx # Ações 8 a 16 (Vender)
 
-        # 2. Avaliação do BASL e Pânico
+        # 3. Avaliação do BASL e Pânico
         units_on_board = 0
         total_stars = 0
         for y in range(4):
@@ -82,55 +96,16 @@ class GeneticAgent:
                     total_stars += champ.getStarLevel()
                     
         current_basl = (total_stars / units_on_board) if units_on_board > 0 else 0.0
-        
-        # Ativa o botão de pânico se a vida estiver baixa
         effective_min_gold = 0 if hp <= self.genes["hp_panic_threshold"] else self.genes["min_gold"]
 
-        # 3. Decisão de Gastar Ouro (Level vs Roll)
+        # 4. Decisão de Gastar Ouro (Level vs Roll)
         if gold > effective_min_gold:
-            # Se o tabuleiro está mais fraco que a meta de estrelas, ele rola a loja para buscar upgrades
             if current_basl < self.genes["target_basl"]:
                 if gold >= 2:
-                    return 2
-            # Se já bateu a meta de estrelas, ele tenta subir de nível
+                    return 2 # Rolar a loja
             else:
                 if gold >= 4:
-                    return 1
+                    return 1 # Comprar XP
 
-        # 4. Posicionamento Automático
-        if units_on_board < level:
-            best_bench_idx = -1
-            best_bench_score = -1.0
-            for i, c in enumerate(bench):
-                if c is not None:
-                    score = self._score_champ(c.getName())
-                    if score > best_bench_score:
-                        best_bench_score = score
-                        best_bench_idx = i
-            
-            if best_bench_idx != -1:
-                champ_name = bench[best_bench_idx].getName()
-                champ_range = self.py_dict.get(champ_name, {}).get("range", 1)
-                target_rows = [2, 3] if champ_range == 1 else [0, 1]
-                
-                empty_slot = -1
-                for y in target_rows:
-                    for x in range(7):
-                        if not board.isOccupied(x, y):
-                            empty_slot = y * 7 + x
-                            break
-                    if empty_slot != -1:
-                        break
-                        
-                if empty_slot == -1:
-                    for slot in range(28):
-                        x = slot % 7
-                        y = slot // 7
-                        if not board.isOccupied(x, y):
-                            empty_slot = slot
-                            break
-
-                if empty_slot != -1:
-                    return 45 + (best_bench_idx * 28) + empty_slot
-
+        # 5. Fim do planejamento (O C++ vai fazer o AutoDeploy na arena depois disso)
         return 0

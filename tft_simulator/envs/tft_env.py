@@ -3,7 +3,6 @@ import random
 import tft_engine as tft
 from .state_encoder import StateEncoder
 from .action_decoder import ActionDecoder
-from .reward_calculator import RewardCalculator
 
 class TFTEnvironment:
     def __init__(self, py_dict, cpp_db, num_players=8):
@@ -23,7 +22,6 @@ class TFTEnvironment:
         
         self.state_encoder = StateEncoder(py_dict)
         self.action_decoder = ActionDecoder()
-        self.reward_calculator = RewardCalculator()
         
         self.available_champions = list(py_dict.keys())
 
@@ -77,23 +75,26 @@ class TFTEnvironment:
                 success = result
             
             if not success:
-                rewards[i] += self.reward_calculator.calculate_step_reward(True)
+                continue
                 
             if action == 0:
                 self.players_done_planning[i] = True
 
         if all(p_done or not p_alive for p_done, p_alive in zip(self.players_done_planning, self.alive_status)):
-            combat_rewards = self._resolve_macro_turn()
-            for i in range(self.num_players):
-                rewards[i] += combat_rewards[i]
+            self._resolve_macro_turn()
 
         dones = [not alive for alive in self.alive_status]
         
         return self._get_all_observations(), rewards, dones, {}
-
+    
     def _resolve_macro_turn(self):
-        combat_rewards = [0.0] * self.num_players
         alive_players = [i for i, alive in enumerate(self.alive_status) if alive]
+
+        if len(alive_players) <= 1:
+            return
+
+        for p_idx in alive_players:
+            self.players[p_idx].autoDeploy(self.boards[p_idx], 1)
         
         random.shuffle(alive_players)
         matches = []
@@ -103,19 +104,17 @@ class TFTEnvironment:
             p2 = alive_players.pop(0)
             matches.append((p1, p2, True)) 
             
-        # Se sobrou um jogador ímpar, ele luta contra o "fantasma" de alguém aleatório
+
         if len(alive_players) == 1:
             p1 = alive_players.pop(0)
             ghost = random.choice([i for i, alive in enumerate(self.alive_status) if alive and i != p1])
-            matches.append((p1, ghost, False)) # False = O fantasma não sofre dano no mundo real
+            matches.append((p1, ghost, False))
 
         engine = tft.CombatEngine()
 
         for p1_idx, p2_idx, is_p2_real in matches:
-            # 1. Cria a Arena 7x8
             arena = tft.Board(7, 8)
             
-            # 2. Posiciona o Time 1 (Metade de baixo: Y de 0 a 3)
             b1 = self.boards[p1_idx]
             for x in range(7):
                 for y in range(4):
@@ -123,46 +122,32 @@ class TFTEnvironment:
                     if c:
                         arena.placeChampion(x, y, c, 1, c.getStarLevel())
                         
-            # 3. Posiciona o Time 2 Espelhado (Metade de cima: Y de 4 a 7)
             b2 = self.boards[p2_idx]
             for x in range(7):
                 for y in range(4):
                     c = b2.getChampion(x, y)
                     if c:
-                        # Espelha o X e o Y para o inimigo ficar de frente
                         arena.placeChampion(6 - x, 7 - y, c, 2, c.getStarLevel())
 
-            # 4. Inicia a simulação (Limite de 40 segundos)
             stats = engine.simulate(arena, 40.0)
             
-            # 5. Calcula as unidades sobreviventes para o cálculo de dano
             survivors = 0
             for x in range(7):
                 for y in range(8):
                     if arena.getChampion(x, y):
                         survivors += 1
                         
-            # Dano Base do TFT: (Estágio * 2) + Unidades Vivas
             total_damage = (self.current_stage * 2) + survivors
 
-            # 6. Distribui Dano e Recompensas da IA
             if stats.winningTeam == 1:
-                combat_rewards[p1_idx] += self.reward_calculator.calculate_combat_reward(0) # P1 Venceu
                 if is_p2_real:
                     self.players[p2_idx].takeDamage(total_damage)
-                    combat_rewards[p2_idx] += self.reward_calculator.calculate_combat_reward(-total_damage)
             elif stats.winningTeam == 2:
                 self.players[p1_idx].takeDamage(total_damage)
-                combat_rewards[p1_idx] += self.reward_calculator.calculate_combat_reward(-total_damage)
-                if is_p2_real:
-                    combat_rewards[p2_idx] += self.reward_calculator.calculate_combat_reward(0) # P2 Venceu
-            else:
-                # Empate: Ambos tomam dano
+            else: 
                 self.players[p1_idx].takeDamage(total_damage)
-                combat_rewards[p1_idx] += self.reward_calculator.calculate_combat_reward(-total_damage)
                 if is_p2_real:
                     self.players[p2_idx].takeDamage(total_damage)
-                    combat_rewards[p2_idx] += self.reward_calculator.calculate_combat_reward(-total_damage)
 
         self.current_round += 1
         if self.current_round > 7:
@@ -172,17 +157,13 @@ class TFTEnvironment:
         self.players_done_planning = [False] * self.num_players
         self.shops = [self._generate_random_shop() for _ in range(self.num_players)]
 
-        # --- FASE DE ECONOMIA ---
         for i, player in enumerate(self.players):
             if self.alive_status[i]:
-                player.addNaturalXp()  # +2 XP por turno
-                player.applyInterest() # Rende juros do ouro acumulado
-                player.addGold(5)      # Renda base por turno
+                player.addNaturalXp()  
+                player.applyInterest() 
+                player.addGold(5)     
         
-        # Atualiza quem morreu neste turno
         self.alive_status = [p.getHp() > 0 for p in self.players]
-        
-        return combat_rewards
 
     def _get_all_observations(self):
         obs = []

@@ -3,9 +3,10 @@ import os
 import json
 import time
 import random
+import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "build"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "build", "Release"))
 
 import tft_engine as tft
 from envs.tft_env import TFTEnvironment
@@ -110,8 +111,8 @@ def run_training():
     py_dict, json_path = load_champions_data()
     
     POP_SIZE = 320
-    GENERATIONS = 20
-    MATCHES_PER_GEN = 30 
+    GENERATIONS = 10
+    MATCHES_PER_GEN = 4 
     
     manager = PopulationManager(py_dict, pop_size=POP_SIZE, mutation_rate=0.08, sigma=0.1)
     
@@ -151,17 +152,21 @@ def run_training():
         print(f"-> Score Médio: {avg_score:.1f} | Melhor Score: {fitness_scores[best_idx]:.1f}")
         print(f"-> GENOMA DO CAMPEÃO:")
         print(f"   Economia: Guarda {best_agent.genes['min_gold']:.0f} Gold | Pânico: {best_agent.genes['hp_panic_threshold']:.0f} HP | Alvo Estrelas: {best_agent.genes['target_basl']:.2f}")
-        if gen ==10:
+
+        if gen == GENERATIONS:
             run_exhibition_match(best_agent.genes, py_dict, json_path)
         
-        with open(os.path.join("data", "best_genetic_agent.json"), "w") as f:
-            json.dump(best_agent.genes, f, indent=4)
+        sorted_indices = np.argsort(fitness_scores)[::-1]
+        top_30_genes = [manager.population[idx].genes for idx in sorted_indices[:30]]
+        
+        with open(os.path.join("data", "top_30_genetic_agents.json"), "w") as f:
+            json.dump(top_30_genes, f, indent=4)
             
         if gen < GENERATIONS:
             manager.evolve(fitness_scores)
 
     print("\n--- TREINAMENTO CONCLUÍDO ---")
-    print("O melhor genoma foi salvo em data/best_genetic_agent.json")
+    print("Os melhores genomas foram salvos em data/top_30_genetic_agents.json")
 
 if __name__ == "__main__":
     run_training()

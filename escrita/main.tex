@@ -3,13 +3,15 @@
 \usepackage{graphicx,url}
 \usepackage[utf8]{inputenc}
 \usepackage[brazilian]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \sloppy
 
 \title{Desenvolvimento de um Simulador de Auto Battler Integrado ao Treinamento de Inteligência Artificial}
 \author{Herich Gabriel de Campos\inst{1}, Josiel Neumann Kuk\inst{1}}
 \address{Departamento de Ciência da Computação \\
   Universidade Estadual do Centro-Oeste (UNICENTRO)\\
-  Guarapuava -- PR -- Brazil
+  Guarapuava, PR, Brasil
   \email{57023740007@unicentro.edu.br, josiel@unicentro.br}
 }
 
@@ -17,109 +19,152 @@
 \maketitle
 
 \begin{abstract}
-  This work presents the development of a custom, highly optimized Auto Battler simulator written in C++, coupled with a Python interface via pybind11, specifically designed for training Artificial Intelligence agents. Commercial Auto Battlers feature complex mechanics such as shared unit pools, grid-based pathfinding, and dynamic economy systems, making them challenging environments for machine learning. By creating a lightweight, headless simulator that provides dense rewards and detailed combat statistics, this project enables efficient agent training and evaluation. The methodology covers the architectural design of the simulation engine, including the combat loop, pathfinding algorithms, and the integration pipeline for reinforcement learning algorithms.
+  This work presents the development of a custom, highly optimized Auto Battler simulator written in C++, coupled with a Python interface via pybind11, specifically designed for training Artificial Intelligence agents. Commercial Auto Battlers feature complex mechanics such as shared unit pools, grid-based pathfinding, and dynamic economy systems, making them challenging environments for machine learning due to their massive state spaces and closed architectures. By creating a lightweight, headless simulator that provides dense rewards and data-rich state observations, this project enables efficient agent training. The methodology covers the architectural design of the simulation engine, the resolution of spatial pathfinding challenges, the implementation of Genetic Algorithms for greedy economic pruning optimization, and the execution pipeline for Hierarchical Reinforcement Learning via Proximal Policy Optimization (PPO) over a highly reduced 17-discrete action space.
 \end{abstract}
 
 \begin{resumo}
-  Este trabalho apresenta o desenvolvimento de um simulador otimizado de Auto Battler escrito em C++, integrado a uma interface Python via pybind11, projetado especificamente para o treinamento de agentes de Inteligência Artificial. Auto Battlers comerciais possuem mecânicas complexas, como pools compartilhadas de unidades, busca de rotas em grade e sistemas dinâmicos de economia, tornando-os ambientes desafiadores para aprendizado de máquina. Através da criação de um simulador leve, sem interface gráfica (headless) e capaz de fornecer recompensas densas (dense rewards) e estatísticas detalhadas de combate, este projeto viabiliza o treinamento e avaliação eficientes de agentes. A metodologia abrange o projeto arquitetural do motor de simulação, incluindo o laço de combate, algoritmos de busca de rotas e a esteira de integração para algoritmos de aprendizado por reforço.
+  Este trabalho apresenta o desenvolvimento de um simulador otimizado de Auto Battler escrito em C++, integrado a uma interface Python via pybind11, projetado especificamente para o treinamento de agentes de Inteligência Artificial. Auto Battlers comerciais possuem mecânicas complexas, como pools compartilhadas de unidades, busca de rotas em grade e sistemas dinâmicos de economia, tornando-os ambientes desafiadores para o aprendizado de máquina devido aos seus vastos espaços de estados e arquiteturas fechadas. Através da criação de um simulador leve, sem interface gráfica (headless) e capaz de fornecer recompensas densas, este projeto viabiliza o treinamento acelerado de agentes. A metodologia abrange o projeto arquitetural do motor de simulação, a resolução de desafios de busca de rotas espaciais, a otimização de heurísticas de poda econômica por Algoritmos Genéticos e a esteira de execução para o paradigma de Aprendizado por Reforço Hierárquico via algoritmo PPO sobre um espaço reduzido de 17 ações discretas.
 \end{resumo}
 
-% ============================================================
 \section{Introdução} \label{sec:introducao}
-% ============================================================
 
-O gênero de jogos \textit{Auto Battler}, popularizado por títulos como \textit{Teamfight Tactics} — que ultrapassou 33 milhões de jogadores mensais \cite{henkel2019} — e \textit{Dota Underlords}, baseia-se em escolhas estratégicas de economia, posicionamento em grade e sinergia de unidades automáticas. Devido ao seu vasto espaço de estados e tomada de decisões com informações imperfeitas, este gênero apresenta um ambiente rico e altamente complexo para a pesquisa em Inteligência Artificial (IA).
+O gênero de jogos eletrônicos de estratégia conhecido como de Auto Battler, popularizado por títulos comerciais como Teamfight Tactics e Dota Underlords, baseia-se em escolhas macroeconômicas, posicionamento tático em grades bidimensionais e gerenciamento probabilístico de sinergias entre unidades combatentes automáticas. Estatísticas de mercado indicam que o gênero atrai um engajamento massivo, superando a marca de 33 milhões de usuários ativos mensais em plataformas consolidadas \cite{henkel2019}. Do ponto de vista da ciência da computação, esses jogos representam ambientes de pesquisa de altíssima complexidade, caracterizados por espaços de estados astronômicos, estocasticidade elevada, informação imperfeita e decisões de longo prazo com dependências não lineares.
 
-Aplicar técnicas de aprendizado de máquina diretamente em clientes comerciais de jogos é muitas vezes inviável devido ao alto custo computacional de renderização e à ausência de APIs que exponham o estado interno do jogo de forma acelerada. Faz-se necessária, portanto, a construção de motores de simulação \textit{headless} que permitam a execução de milhares de partidas por segundo, à semelhança de ambientes como o OpenAI Gym \cite{brockman2016}.
+A aplicação direta de modelos de aprendizado de máquina em clientes de jogos comerciais, contudo, depara-se com barreiras infraestruturais intransponíveis. O custo computacional proibitivo associado à renderização gráfica tridimensional impede a execução paralela massiva indispensável para algoritmos modernos de aprendizado por tentativa e erro. Adicionalmente, a natureza proprietária de código fechado dessas plataformas corporativas obstaculiza o acesso direto aos tensores de estado interno em tempo de execução. Para transpor essa limitação, pesquisadores dependem do desenvolvimento de motores de simulação customizados e desprovidos de interface gráfica, comumente denominados headless, capazes de simular milhares de iterações lógicas por segundo, operando de forma análoga a ecossistemas padronizados da literatura como o OpenAI Gym \cite{brockman2016}.
 
-O objetivo geral deste trabalho é desenvolver um motor de simulação de Auto Battler de alto desempenho em C++ e utilizá-lo como ambiente para o treinamento de um agente de Inteligência Artificial através de \textit{bindings} em Python. Os objetivos específicos incluem: a implementação de um sistema de combate com busca de rotas em tempo real, mitigação de danos e controle de habilidades; e a estruturação de um sistema de recompensas densas (\textit{Dense Rewards}) para acelerar a convergência do aprendizado do agente.
+A principal contribuição científica deste estudo reside no projeto, implementação e validação de uma infraestrutura computacional de caixa-branca projetada para isolar as variáveis cognitivas desse domínio estratégico. Ambientes comerciais sofrem mutações constantes em suas regras e tabelas de atributos através de atualizações periódicas de balanceamento. Essa extrema volatilidade invalida heurísticas fixas rapidamente e explica o abandono precoce de múltiplos projetos de agentes baseados em raspagem de tela por volta do início do ano de 2025. O propósito deste trabalho não é conceber uma ferramenta de trapaça ou um preditor estatístico passivo de metajogo baseado em frequências históricas, mas sim estruturar um framework imune a oscilações externas, permitindo o escrutínio metodológico da adaptabilidade algorítmica.
 
-O restante deste documento está organizado da seguinte forma: a Seção~\ref{sec:referencial} apresenta o referencial teórico; a Seção~\ref{sec:relacionados} discute os trabalhos relacionados; a Seção~\ref{sec:arquitetura} detalha a arquitetura do simulador; a Seção~\ref{sec:experimentos} descreve os experimentos realizados; e a Seção~\ref{sec:conclusao} apresenta as conclusões e trabalhos futuros.
+Para cumprir esse escopo, o objetivo geral estabelecido é desenvolver um motor de simulação de Auto Battler de alto desempenho em C++ e utilizá-lo como plataforma para o treinamento comparativo de agentes inteligentes. Os objetivos específicos contemplam a modelagem matemática do ciclo econômico e de escassez compartilhada, a superação de gargalos de engenharia de software no cálculo de rotas em malhas dinâmicas, o emprego de Algoritmos Genéticos para a calibração de podas heurísticas e a estruturação de um modelo de Aprendizado por Reforço Hierárquico capaz de contornar a maldição da dimensionalidade.
 
-\section{Arquitetura e Desenvolvimento do Simulador} \label{sec:arquitetura}
+Este artigo está estruturado em seções sequenciais. A Seção~\ref{sec:referencial} fundamenta os conceitos matemáticos e teóricos necessários. A Seção~\ref{sec:relacionados} discute o estado da arte e as iniciativas correlatas. A Seção~\ref{sec:metodologia} detalha as escolhas de engenharia do simulador e a modelagem dos agentes. A Seção~\ref{sec:resultados} expõe as análises empíricas dos experimentos lógicos, e a Seção~\ref{sec:conclusao} encerra o documento com as considerações finais e propostas de expansão.
 
-\subsection{Arquitetura Híbrida C++ e Python}
+\section{Fundamentação Teórica} \label{sec:referencial}
 
-O simulador foi projetado utilizando uma arquitetura híbrida para aliar máxima performance de processamento à flexibilidade de integração. Toda a lógica computacional intensiva de jogo, incluindo cálculos de dano, mitigação por armadura e resistência mágica, busca de rotas espaciais e instanciamento de habilidades, foi implementada nativamente em C++. Esta abordagem garante eficiência no uso de memória e velocidade de execução, requisitos fundamentais para o treinamento de agentes de Aprendizado por Reforço, cujo sucesso depende da simulação de milhões de cenários em curto intervalo de tempo.
+O entendimento dos pilares matemáticos e conceituais que sustentam os jogos de estratégia automatizada e os algoritmos de aprendizado de máquina é fundamental para o estabelecimento deste modelo. Esta seção introduz os tópicos que garantem a autonomia interpretativa dos métodos empregados no simulador.
 
-A camada superior de controle foi desenvolvida em Python. Através da biblioteca \texttt{pybind11}, o código em C++ foi compilado em um módulo compartilhável, permitindo que scripts em Python inicializem o tabuleiro, aloquem as unidades e gerenciem o fluxo da simulação. Esta separação de responsabilidades cria uma interface padronizada que elimina gargalos de comunicação e facilita a integração futura com bibliotecas de Inteligência Artificial.
+\subsection{Mecânicas de Auto Battlers e Complexidade de Estados}
+O fluxo operacional de um Auto Battler divide-se em fases de planejamento estratégico e combates táticos automatizados. No planejamento, os competidores utilizam recursos financeiros para adquirir unidades combatentes dispostas de forma estocástica em uma vitrine virtual rotativa. A complexidade do sistema emerge da interconexão de três fatores lógicos, a saber, a progressão de juros compostos baseada no ouro acumulado, a ativação de sinergias combinatórias que amplificam atributos de classes afins e o sistema de fusão geométrica, em que o agrupamento de três unidades idênticas consome as entidades para gerar uma versão promovida de maior poder conceitual.
 
-\subsection{Ingestão Dinâmica de Dados}
+A mecânica de reserva global introduz uma restrição severa de Teoria dos Jogos ao ecossistema. O estoque de campeões é finito e compartilhado simultaneamente por todos os oito integrantes de uma partida. Desse modo, a remoção de cópias de uma peça por um agente reduz diretamente a probabilidade de transição estatística para que os demais a encontrem em suas respectivas vitrines. Essa dependência mútua transforma o ambiente em um jogo de informação imperfeita e dinâmica competitiva de soma não zero.
 
-Para garantir a flexibilidade na configuração dos experimentos, o motor não possui status de entidades ou regras de balanceamento codificadas rigidamente no código. Utilizou-se a biblioteca \texttt{nlohmann/json} para a leitura de estruturas externas no formato JSON. Modificações referentes a custos, atributos base, adição ou remoção de classes e itens são realizadas diretamente nestes arquivos, refletindo instantaneamente no ambiente simulado sem a necessidade de recompilação do binário C++. A implementação deste analisador léxico assegura o isolamento de memória, prevenindo comportamentos indefinidos e vazamentos de dados na aplicação.
+\subsection{Algoritmo de Busca em Largura (BFS)}
+A navegação espacial das unidades automáticas durante a resolução tática do combate exige rotinas de pathfinding eficientes. O tabuleiro do jogo é discretizado sob a forma de uma matriz bidimensional não ponderada. O algoritmo de Busca em Largura é um método clássico de exploração de grafos que expande seus nós de maneira radial e concêntrica a partir de uma origem determinada. Dada a propriedade matemática de garantir a descoberta do caminho mínimo em malhas de custo uniforme, o BFS revela-se ideal para computar deslocamentos baseados na métrica de Distância de Manhattan, fornecendo respostas determinísticas à movimentação das entidades.
 
-\subsection{O Motor de Combate (\textit{Combat Engine})}
+\subsection{Algoritmos Genéticos (AG)}
+Os Algoritmos Genéticos representam métodos meta-heurísticos de otimização global inspirados nos vetores da evolução darwiniana e da genética molecular \cite{goldberg1989, holland1975}. O algoritmo gerencia uma população de soluções candidatas parametrizadas sob a forma de vetores cromossômicos. Através de ciclos geracionais ordenados, cada indivíduo é submetido a uma função de aptidão encarregada de quantificar matematicamente a eficiência de seu comportamento. Os genomas mais adaptados apresentam maior probabilidade estatística de seleção para sofrerem operadores de recombinação e mutações pontuais com ruído gaussiano, permitindo a exploração de superfícies de custo complexas e a fuga de ótimos locais.
 
-O núcleo da simulação é governado por um laço temporal iterativo baseado em \textit{ticks}. O ambiente é atualizado em frações de 0.1 segundos, momento em que o motor deduz os tempos de recarga de ataque e processa a geração passiva de mana das unidades.
+\subsection{Aprendizado por Reforço e o Algoritmo PPO}
+O Aprendizado por Reforço formula problemas de tomada de decisão sequencial através do aparato de Processos de Decisão de Markov \cite{sutton2018}. O agente interage com o meio através de uma tripla composta por observação de estado, seleção de ação e recebimento de recompensa escalar. A literatura matemática demonstra que a densidade do sinal de recompensa determina a viabilidade prática da convergência \cite{mnih2015}. Sinais esparsos reduzem a velocidade de convergência em horizontes temporais longos, demandando técnicas de modelagem de recompensa para intercalar feedbacks imediatos associados a micro-objetivos táticos.
 
-A movimentação e o cálculo de distâncias ocorrem em uma matriz estruturada em uma grade de 7x8. Quando uma entidade não possui um alvo válido em seu alcance de ataque, o sistema emprega o algoritmo de Busca em Largura (BFS) para calcular a rota mais eficiente, orientando o deslocamento pelas células vazias. A cada instância de ataque ou invocação de magia, o motor reavalia o estado do tabuleiro para determinar a unidade adversária viva mais próxima, lidando de forma consistente com mortes em tempo real e readequação de alvos. Adicionalmente, foi implementada uma mecânica de limite de tempo: ao atingir 30 segundos de combate, um gatilho de morte súbita é acionado para acelerar a resolução de impasses.
+O algoritmo Proximal Policy Optimization consolida-se como o estado da arte para otimização de políticas estocásticas em espaços complexos \cite{schulman2017}. Sendo um método de gradiente de política do tipo actor-critic, o PPO introduz uma função de perda modificada por um operador de clipping. Essa restrição matemática limita a amplitude da atualização dos pesos da rede neural a cada iteração de treino, impedindo a ocorrência de atualizações destrutivas e conferindo estabilidade assintótica ao processo de aprendizado.
 
-\subsection{Sistema de Dano, Habilidades e Sinergias}
-
-A mecânica de combate distingue entre dano bruto, dano real e dano verdadeiro. Todo dano processado pelo motor passa por funções de mitigação que aplicam fórmulas de redução baseadas nas resistências do alvo, com exceção do dano verdadeiro, que ignora as mitigações defensivas. O simulador suporta mecânicas complexas de feitiços, incluindo curas, escudos escaláveis com base nos pontos de vida (HP) máximos, ataques em área de efeito (AoE), dano em cone e atordoamentos temporários.
-
-Para viabilizar a formulação de recompensas no modelo de Inteligência Artificial, o motor implementa rastreamento granular de desempenho. Todo o dano provocado por um campeão é acumulado em variáveis internas da entidade, sendo exportado ao término do combate para integrar a Função de Recompensa (\textit{Reward Function}) da rede neural.
-
-A ativação de sinergias é controlada por estruturas de dados do tipo \texttt{std::set}, que validam as instâncias no tabuleiro para garantir que características exclusivas sejam contadas adequadamente. Estas sinergias operam em dois momentos distintos: no pré-combate, aplicando modificadores imediatos na inicialização da rodada (como escudos brutos ou amplificadores de dano), e durante o combate, inserindo eventos específicos diretamente no laço de execução temporal, como atordoamentos globais agendados, conjuração dupla de feitiços ou execução imediata de unidades adversárias.
-
-\subsection{Estruturas de Gerenciamento do Metajogo}
-
-No nível macro, o ambiente modela não apenas o combate, mas todo o ciclo de vida e progressão de uma partida do gênero. O meta-modelo implementa uma reserva global (\textit{global pool}) de peças disponíveis, limitando a oferta e forçando a concorrência estratégica pelo mesmo conjunto de recursos. O sistema econômico computa o acúmulo de ouro considerando a renda base, rendimentos de juros acumulados e bônus dinâmicos por sequências de vitórias ou derrotas (\textit{streaks}). O gerenciamento de partida abrange ainda a alocação de pontos de experiência, evolução de níveis e o algoritmo de apresentação aleatória e probabilística de unidades na loja a cada ciclo.
-
-
-% ============================================================
-\section{Referencial Teórico} \label{sec:referencial}
-% ============================================================
-
-Para modelar com precisão o ambiente do jogo, é necessário compreender as mecânicas fundamentais dos Auto Battlers. O sistema de combate baseia-se em atributos matemáticos como mitigação de dano por armadura, taxa de ataque baseada em \textit{ticks} de tempo e alcance das unidades. A movimentação no tabuleiro exige algoritmos eficientes de busca, como a Busca em Largura (BFS), para desviar de obstáculos dinâmicos em uma métrica de Distância de Manhattan.
-
-No contexto da Inteligência Artificial, o treinamento de agentes em ambientes complexos é fundamentado pela teoria do Aprendizado por Reforço \cite{sutton2018}, na qual um agente aprende uma política de ações ao maximizar uma função de recompensa acumulada ao longo do tempo. A utilização de recompensas densas — onde o agente é bonificado por métricas intermediárias como dano causado ou duração de sobrevivência — em contraposição a recompensas esparsas (apenas vitória ou derrota), é um fator crucial para a viabilidade do treinamento em tempo hábil \cite{mnih2015}. Como alternativa ou complemento, Algoritmos Genéticos \cite{goldberg1989, holland1975} também podem ser empregados na otimização de estratégias de posicionamento.
-
-% ============================================================
 \section{Trabalhos Relacionados} \label{sec:relacionados}
-% ============================================================
 
-Trabalhos recentes demonstram o crescente interesse em aplicar IA especificamente ao domínio dos Auto Battlers. Liu \cite{liu2022} propôs uma abordagem computacional para otimização de posicionamento no \textit{Teamfight Tactics}, utilizando técnicas de busca e avaliação de estados. De forma similar, Zhang \cite{zhang2024} desenvolveu um agente inteligente para Auto Battlers com base em aprendizado por reforço, evidenciando a viabilidade de algoritmos como PPO \cite{schulman2017} nesse contexto.
+A aplicação de métodos computacionais avançados ao domínio de jogos eletrônicos tem expandido suas fronteiras para além de ambientes de informação perfeita. Esta seção contextualiza as iniciativas acadêmicas e as abordagens empíricas direcionadas ao gênero estudado.
 
-O presente trabalho se diferencia ao construir um motor de simulação próprio em C++ de alta performance, em vez de interagir com o cliente do jogo, e ao fornecer estatísticas granulares de combate (dano causado, mitigado e cura) para compor funções de recompensa densas, viabilizando um ciclo de treinamento mais eficiente.
+O posicionamento tático em tabuleiros de Auto Battlers foi investigado por Liu \cite{liu2022}, que propôs um modelo focado estritamente na otimização espacial das unidades no jogo Teamfight Tactics. O autor empregou algoritmos tradicionais de busca em árvores de decisão para computar distribuições geométricas capazes de maximizar o tempo de sobrevivência das peças na linha de frente. Embora o estudo tenha demonstrado eficácia na validação geométrica do combate, a abordagem isolou o problema, ignorando a dinâmica de gerenciamento econômico de longo prazo e as probabilidades de transição de loja.
 
-% ============================================================
-\section{Arquitetura e Desenvolvimento do Simulador} \label{sec:arquitetura}
-% ============================================================
+O treinamento de agentes autônomos abrangendo o ciclo completo de decisões econômicas e de compras foi abordado por Zhang \cite{zhang2024}. O pesquisador estruturou um agente inteligente baseado em aprendizado por reforço profundo, demonstrando a aplicabilidade de arquiteturas de gradiente de política para a tomada de decisões no gênero. O artigo de Zhang representou a única referência bibliográfica de alto rigor científico identificada na literatura acadêmica que ataca o problema sob a ótica de agentes de decisão, ressaltando a existência de uma lacuna investigativa na área.
 
-\subsection{Modelagem de Dados e \textit{Global Pool}}
+Fora do escopo estritamente acadêmico, o ecossistema de jogadores desenvolveu ferramentas analíticas comerciais de larga escala, como a plataforma MetaTFT. Esses sistemas realizam a ingestão diária de milhões de partidas públicas armazenadas em bancos de dados relacionais para gerar distribuições de frequência estatística e minijogos preditivos de combate. Contudo, esses sistemas operam de forma puramente descritiva e retrospectiva, não envolvendo componentes cognitivos ou inteligência emergente. Projetos independentes voltados à criação de agentes autônomos reais em clientes comerciais geralmente recorriam a técnicas de processamento de imagem e injeção de memória. Devido à volatilidade severa imposta pelos pacotes quinzenais de atualização dos estúdios de desenvolvimento, a totalidade dessas iniciativas de software acabou abandonada, registrando-se repositórios e servidores comunitários de comunicação completamente desativados desde o início do ano de 2025.
 
-As entidades do jogo, como campeões e seus atributos, foram externalizadas em estruturas de dados padronizadas no formato JSON, facilitando a extensão da base de dados sem recompilação do motor. O gerenciamento de peças disponíveis é feito por meio de uma \textit{Global Pool}, garantindo que a probabilidade de aparição de uma unidade na loja diminua conforme cópias são retiradas do estoque, espelhando a dinâmica de escassez competitiva dos jogos comerciais.
+O presente estudo diferencia-se das abordagens mapeadas ao eliminar a dependência de plataformas corporativas mutáveis. A concepção de um simulador nativo e customizado permite o isolamento metodológico necessário para investigar os limites do aprendizado de máquina de forma independente.
 
-\subsection{O Motor de Combate (\textit{Combat Engine})}
+\section{Metodologia} \label{sec:metodologia}
 
-O fluxo de combate foi projetado para operar em frações de tempo chamadas \textit{ticks}. A cada pulso, a máquina de estados verifica temporizadores de ataque (\textit{cooldowns}), acúmulo de mana e invocações de habilidades especiais. A movimentação é resolvida dinamicamente por uma rotina BFS otimizada para matrizes bidimensionais, na qual cada unidade busca o hexágono válido mais próximo de seu alvo.
+A construção de um ecossistema experimental autocontido exige o desenvolvimento coordenado de componentes mecânicos e interpretadores analíticos. Esta seção detalha as escolhas de engenharia de software e as modelagens matemáticas que viabilizaram a redução de complexidade do simulador.
 
-\subsection{A Ponte de Integração C++ / Python}
+\subsection{Arquitetura Híbrida C++ e Python via Pybind11}
+A otimização de uma plataforma de treinamento para agentes inteligentes requer a conciliação de duas propriedades conflitantes: eficiência de execução em baixo nível e flexibilidade de modelagem vetorial em alto nível. Para solucionar esse impasse, concebeu-se uma infraestrutura computacional híbrida. O motor central do simulador foi construído em linguagem C++, utilizando gerenciamento explícito de memória e tipagem estática para processar os laços iterativos intensivos de combate, filtragens de estados, cálculos de mitigação de dano por armadura e atualizações de vida.
 
-Para viabilizar o uso do simulador por bibliotecas modernas de IA (como TensorFlow ou PyTorch), a lógica central em C++ foi exposta para Python através da biblioteca \texttt{pybind11}. Esta abordagem permite que a rede neural decida as ações de alto nível no ambiente Python, enquanto toda a carga computacional da simulação de combates ocorre nativamente em C++, eliminando gargalos de comunicação entre as camadas.
+Para permitir a comunicação dessa engine com os frameworks dominantes de aprendizado de máquina baseados em Python, utilizou-se a biblioteca pybind11. Esta ferramenta realiza a compilação do código nativo C++ gerando um módulo binário compartilhável com extensão pyd no ambiente Windows. O interpretador Python invoca os métodos lógicos e transfere tensores de estado diretamente na memória RAM, eliminando gargalos clássicos de entrada e saída decorrentes do uso de arquivos de texto ou sockets de rede interprocessos.
 
-% ============================================================
-\section{Experimentos e Resultados} \label{sec:experimentos}
-% ============================================================
+\subsection{Ingestão Dinâmica de Dados via JSON}
+Com o intuito de conferir escalabilidade e imunidade a recompilações ao ecossistema, os dados de balanceamento foram completamente externalizados. Atributos como pontos de vida base, velocidade de ataque, alcance de alvos, tabelas de custo e multiplicadores de sinergias são armazenados em estruturas padronizadas no formato JSON. A engine realiza o parsing léxico desses arquivos em tempo de execução através da biblioteca nlohmann/json. Essa abstração assegura o isolamento de memória e possibilita a modificação imediata do conjunto de regras do jogo sem a necessidade de recompilar os binários executáveis.
 
-\subsection{Avaliação de Performance}
+\subsection{O Motor de Combate e o Tratamento de Colisões Dinâmicas}
+O núcleo de resolução tática opera guiado por um laço temporal discreto baseado em pulsos lógicos denominados ticks, configurados para intervalos equivalentes a 0.1 segundos de tempo real. A cada pulso, o motor computa o decréscimo de tempos de recarga de ataques e processa a geração passiva de mana por engajamento. O tabuleiro é modelado sob a forma de uma grade quadrilátera de dimensões 7x8 células livres.
 
-Serão realizados testes de desempenho medindo a taxa de partidas completas simuladas por segundo em diferentes configurações de número de unidades, a fim de quantificar o ganho obtido pela implementação nativa em C++ em comparação a abordagens baseadas exclusivamente em Python.
+Durante a fase de validação física da engine de combate, detectou-se um problema crítico de travamento de entidades: quando múltiplas unidades computavam de forma estática o menor caminho até seus alvos, a ocorrência de colisões físicas em gargalos geométricos do tabuleiro resultava em inação permanente, onde unidades aliadas bloqueavam umas às outras. Para solucionar esse impasse de engenharia, a rotina de pathfinding baseada em BFS foi reestruturada de maneira dinâmica. A cada tick temporal, o algoritmo reavalia as células adjacentes e o mapa de ocupação da grade. Caso o hexágono de destino intermediário sofra uma obstrução física por outra entidade viva, o sistema recalcula em tempo real uma trajetória alternativa de contorno ou altera o foco para o inimigo livre mais próximo, estabelecendo um comportamento condizente com a dinâmica real do gênero.
 
-\subsection{Treinamento do Agente de IA}
+\subsection{Reguladores do Metajogo: Economia e Reserva Global}
+A camada macroeconômica gerencia os recursos financeiros através de equações determinísticas de juros compostos e bônus por regularidade. O acúmulo de ouro é computado ao término de cada rodada considerando uma renda base fixa, um piso decimal correspondente aos juros gerados pela retenção de capital e gratificações dinâmicas atreladas a sequências consecutivas de vitórias ou derrotas.
 
-Serão conduzidos experimentos de treinamento utilizando o algoritmo PPO \cite{schulman2017}, com e sem o uso de recompensas densas derivadas das estatísticas de combate do motor. A comparação entre as curvas de aprendizado permitirá avaliar o impacto das recompensas intermediárias na velocidade de convergência do agente.
+O surgimento de campeões na loja respeita uma tabela probabilística indexada ao nível atual do jogador, consultando uma estrutura de dados global compartilhada. Essa reserva global opera como um mapa hash unificado contendo o estoque finito de cópias de cada peça. A remoção de entidades do estoque por qualquer um dos oito competidores atualiza instantaneamente as matrizes de probabilidade do lobby, simulando com fidelidade o fenômeno de escassez competitiva e induzindo a necessidade de adaptação estratégica.
 
-% ============================================================
-\section{Conclusão e Trabalhos Futuros} \label{sec:conclusao}
-% ============================================================
+\subsection{Aprendizado por Reforço Hierárquico e Redução de Dimensionalidade}
+A modelagem original de um agente de aprendizado por reforço para o simulador esbarrou na vastidão do espaço de decisões, que totalizava 1081 ações discretas ao englobar todas as permutações espaciais de movimentação de peças entre células do tabuleiro e slots do banco. Esse cenário gerava taxas de exploração ineficientes, onde a rede neural exauria sua capacidade de aprendizado emitindo comandos geograficamente inválidos. Para solucionar essa restrição, adotou-se o paradigma de Aprendizado por Reforço Hierárquico através da cisão de responsabilidades, reduzindo o espaço de decisões da rede para apenas 17 ações discretas focadas estritamente na macrogestão econômica, conforme estruturado na Tabela 1.
 
-Este trabalho propõe o desenvolvimento de um simulador escalável e veloz para o treinamento de agentes de IA no domínio de Auto Battlers. A arquitetura baseada em um motor C++ com interface Python via \texttt{pybind11} visa eliminar os principais gargalos computacionais presentes em abordagens que utilizam clientes comerciais, viabilizando ciclos de treinamento mais eficientes.
+\begin{table}[h]
+\centering
+\caption{Mapeamento do Espaço Reduzido de Ações do Agente Neural}
+\label{tab:acoes}
+\begin{tabular}{ll}
+\hline
+\textbf{Intervalo de ID da Ação} & \textbf{Descrição da Operação Macroeconômica} \\ \hline
+Ação 0 & Declaração de inatividade voluntária (Passar Turno) \\
+Ação 1 & Aquisição de Pontos de Experiência (+4 XP por 4 Ouro) \\
+Ação 2 & Atualização das ofertas da vitrine da loja (Roll por 2 Ouro) \\
+Ações 3 a 7 & Recrutamento da unidade disposta nos slots 1 a 5 da loja \\
+Ações 8 a 16 & Liquidação e venda da unidade alocada nos slots 1 a 9 do banco \\ \hline
+\end{tabular}
+\end{table}
 
-Como trabalhos futuros, planeja-se a expansão da base de dados de unidades e a inclusão de mecânicas de itens combináveis, o que aumentará exponencialmente o espaço de estados e demandará abordagens mais sofisticadas no modelo da rede neural, como arquiteturas baseadas em atenção (\textit{transformers}).
+A retenção dos comandos de venda sob a égide direta da rede neural revelou-se um fator de design crítico para coibir o fenômeno de Mascaramento de Recompensa. Caso o ambiente realizasse vendas automatizadas de forma corretiva para atingir metas financeiras, o agente desenvolveria um comportamento guloso e dependente, falhando em compreender a correlação matemática entre a retenção de capital e a maximização dos juros compostos.
 
-\bibliographystyle{sbc}
-\bibliography{referencias}
+\subsection{Mecanismo de Auto-Deploy Nativo e Heurística de Poda Gulosa}
+Para suportar a redução do espaço de ações do agente sem gerar inação tática, a resolução da microgestão posicional foi internalizada na engine através de um algoritmo nativo de Auto-Deploy construído em C++. Ao término de cada fase de preparação, o método intercepta o inventário total do jogador, unificando as peças dispostas no banco e no tabuleiro. O sistema executa uma rotina de ordenação estável baseada em predicados de dominância: o nível de aprimoramento por estrelas atua como critério primário e o custo de ouro da peça atua como critério secundário de desempate.
 
-\end{document}
+O algoritmo seleciona as principais entidades até o limite numérico ditado pelo nível do jogador e realiza a distribuição geométrica automatizada na grade: campeões categorizados como corpo-a-corpo por possuírem alcance de ataque unitário são inseridos sequencialmente nas fileiras frontais da matriz, enquanto campeões de longo alcance são alocados nas fileiras traseiras. As unidades excedentes são reinseridas nos slots primários do banco de reservas.
+
+Em paralelo, estruturou-se uma Heurística de Poda Gulosa voltada a otimizar o comportamento dos agentes evolucionários do Algoritmo Genético e dos agentes heurísticos de referência. Ao término das interações de compra, um script avalia as peças alocadas no banco. Unidades que possuam um score de aderência inferior a um limiar parametrizado de 0.5 e que estejam em seu nível básico de uma estrela são sinalizadas para liquidação. O gatilho de venda é disparado exclusivamente se o montante financeiro obtido pela comercialização for matematicamente suficiente para transpor o próximo patamar de juros do jogador, maximizando a eficiência de capital da população.
+
+\section{Experimentos e Resultados Preliminares} \label{sec:resultados}
+
+Os ensaios práticos foram conduzidos em duas etapas integradas, visando primeiro calibrar os agentes de referência e, posteriormente, testar a estabilidade do modelo de aprendizado por reforço. Os dados a seguir sintetizam as descobertas empíricas registradas no ambiente.
+
+\subsection{Comportamento Emergente e Validação Tática via Algoritmo Genético}
+O Algoritmo Genético foi submetido a um teste de estresse configurado com uma população de 96 indivíduos distribuídos em lobbies concorrentes ao longo de 10 gerações, operando sob uma taxa de mutação gaussiana de 0.08. O objetivo central deste ensaio foi avaliar a robustez das restrições de escassez da reserva global e do mecanismo de fusão automatizada promoção de peças. Os resultados demonstram que o algoritmo aplicou severas penalidades de aptidão a genomas primitivos que convergiam de forma homogênea para a busca das mesmas unidades de alto custo, eliminando-os precocemente devido à escassez induzida na reserva global.
+
+A convergência geracional produziu uma linhagem estável de agentes caracterizados por uma estratégia do tipo midrange. O fenótipo campeão final convergiu para uma retenção econômica base de 18 moedas de ouro, associada a um limiar de pânico de 15 pontos de vida. O índice regulador de força do tabuleiro fixou-se em 1.44, indicando que o algoritmo aprendeu a abdicar de atualizações compulsivas de loja em estágios intermediários para direcionar o capital para a compra acelerada de níveis de experiência, tática correspondente à abordagem Fast 9 observada em cenários competitivos humanos. A eficácia do Auto-Deploy nativo foi ratificada pela radiografia do confronto de exibição da décima geração, detalhada na Tabela 2, que atesta o preenchimento exato dos tabuleiros com unidades promovidas para duas estrelas e distribuição condizente com os limites de nível.
+
+\begin{table}[h]
+\centering
+\caption{Radiografia do Confronto de Exibição da Geração 10 do AG}
+\label{tab:radiografia}
+\begin{tabular}{cclcl}
+\hline
+\textbf{Rank} & \textbf{ID Agente} & \textbf{Status Final} & \textbf{Nível} & \textbf{Configuração do Tabuleiro de Combate} \\ \hline
+\#1 & Jogador 6 & VIVO (30 HP) & Lvl 9 & Pantheon(2*), Kai'Sa(2*), Milio(2*), Ezreal(2*), Caitlyn(2*) \\
+\#2 & Jogador 1 & MORTO (0 HP) & Lvl 9 & Jhin(2*), Milio(2*), Caitlyn(2*), Riven(2*), Jhin(1*) \\
+\#3 & Jogador 2 & MORTO (0 HP) & Lvl 9 & Jhin(2*), Kai'Sa(2*), Milio(2*), Caitlyn(2*), Maokai(1*) \\
+\#4 & Jogador 4 & MORTO (0 HP) & Lvl 9 & Kai'Sa(2*), Milio(2*), Ezreal(2*), Caitlyn(2*), Maokai(1*) \\
+\#5 & Jogador 5 & MORTO (0 HP) & Lvl 9 & Milio(2*), Ezreal(2*), Caitlyn(2*), Pantheon(2*), Maokai(2*) \\
+\#6 & Jogador 7 & MORTO (0 HP) & Lvl 9 & Ezreal(2*), Ezreal(2*), Caitlyn(2*), Maokai(2*), Pantheon(2*) \\
+\#7 & Jogador 3 & MORTO (0 HP) & Lvl 8 & Maokai(2*), Pantheon(2*), Ezreal(2*), Caitlyn(2*) \\
+\#8 & Jogador 0 & MORTO (0 HP) & Lvl 7 & Maokai(2*), Milio(2*), Ezreal(2*), Kai'Sa(1*) \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Análise de Fenômenos no PPO: Reward Hacking, Colapso e Estabilização}
+Os testes iniciais conduzidos com a arquitetura de Aprendizado por Reforço Profundo evidenciaram os perigos de instabilidade inerentes à modelagem de recompensas em jogos de estratégia. Na primeira parametrização do sinal de feedback, o agente recebia uma bonificação escalar contínua de +0.05 a cada passo temporal de sobrevivência em que mantivesse seus pontos de vida estáveis. A rede neural identificou um atalho matemático destrutivo caracterizado como Reward Hacking: ao emitir sequencialmente comandos de movimentação inválidos na antiga matriz de 1081 ações, o interpretador C++ rejeitava a ação, mas mantinha o ambiente estagnado no mesmo turno, impedindo o progresso em direção à fase de combate. O agente maximizava sua recompensa acumulada de forma infinita sem interagir com as mecânicas do jogo, inflando a duração média do episódio para 72.000 passos lógicos.
+
+A remoção completa do bônus de sobrevivência e a aplicação de uma penalidade temporal rígida voltada a forçar a aceleração das rodadas provocou o efeito colateral inverso, conhecido como Colapso de Política. Diante da severidade das punições e da probabilidade quase nula de estruturar uma vitória através de comandos estocásticos iniciais, a entropia do modelo caiu abruptamente para valores próximos de zero. A rede neural atingiu um estado de inação permanente, optando por emitir comandos vazios para aceitar passivamente a eliminação em oitavo lugar, visto que essa trajetória negativa representava o único porto seguro matematicamente previsível para os gradientes de perda.
+
+A estabilização definitiva do modelo de aprendizado foi alcançada unificando as três frentes de refatoração propostas neste estudo: a compressão do espaço para 17 ações econômicas, a injeção do algoritmo nativo de Auto-Deploy em C++ e a redução do coeficiente de entropia para o patamar de 0.005 no modelo Stable Baselines3. O impacto dessa reformulação infraestrutural nas métricas de treino é imediato e contrastante, conforme documentado na Tabela 3.
+
+\begin{table}[h]
+\centering
+\caption{Métricas Comparativas das Fases de Treinamento do Modelo PPO}
+\label{tab:comparativo}
+\begin{tabular}{llll}
+\hline
+\textbf{Métrica de Monitoramento} & \textbf{Fase 1: Original} & \textbf{Fase 2: Colapso} & \textbf{Fase 3: Refatorada} \\ \hline
+Duração Média do Episódio (\textit{ep\_len\_mean}) & 72.000 passos & 109.000 passos & 239 passos \\
+Recompensa Média Acumulada (\textit{ep\_rew\_mean}) & +3.550,00 & -135,00 & -28,50 \\
+Variância Explicada do Valor (\textit{explained\_variance}) & NaN & -0,882 & 0,983 \\
+Perda de Entropia (\textit{entropy\_loss}) & -1,25 & -0,0004 & -5,89 \\ \hline
+\end{tabular}
+\end{table}
+
+A contração do horizonte temporal para a média estável de 239 passos lógicos por partida acelerou drasticamente a taxa de processamento do ecossistema. O dado mais relevante reside na estabilização do indicador de Variância Explicada no patamar de 0,983. Esse valor atesta que a rede neural de valor compreendeu com exatidão as transições de estado do jogo e o impacto financeiro de suas escolhas macroeconômicas, estabelecendo uma curva de aprendizado saudável e assintótica direcionada à maximização do Top 4 contra a nova população de super oponentes gerada pelo Alg

@@ -216,3 +216,74 @@ bool Player::moveBoardToBoard(int fromX, int fromY, int toX, int toY, Board& boa
     board.placeChampion(toX, toY, tempC, teamId, star);
     return true;
 }
+
+void Player::autoDeploy(Board& board, int teamId) {
+    std::vector<Champion> allUnits;
+
+    for (int i = 0; i < 9; ++i) {
+        if (bench[i] != nullptr) {
+            allUnits.push_back(*bench[i]);
+            delete bench[i];
+            bench[i] = nullptr;
+        }
+    }
+
+    auto positions = board.getAllPositions();
+    for (auto pos : positions) {
+        if (board.getTeam(pos.first, pos.second) == teamId) {
+            Champion* c = board.getChampion(pos.first, pos.second);
+            if (c) {
+                allUnits.push_back(*c);
+                board.removeChampion(pos.first, pos.second);
+            }
+        }
+    }
+
+    if (allUnits.empty()) return;
+    std::sort(allUnits.begin(), allUnits.end(), [](const Champion& a, const Champion& b) {
+        if (a.getStarLevel() != b.getStarLevel()) return a.getStarLevel() > b.getStarLevel();
+        if (a.getCost() != b.getCost()) return a.getCost() > b.getCost();
+        return a.getName() > b.getName();
+    });
+
+    int placedCount = 0;
+    int currentLevel = this->getLevel();
+    std::vector<Champion> leftovers;
+
+    for (const auto& champ : allUnits) {
+        if (placedCount < currentLevel) {
+            bool placed = false;
+            
+            int startY = (champ.getRange() == 1) ? 0 : 2; 
+            int endY = (champ.getRange() == 1) ? 2 : 4;
+
+            for (int y = startY; y < endY && !placed; ++y) {
+                for (int x = 0; x < 7 && !placed; ++x) {
+                    if (!board.isOccupied(x, y)) {
+                        board.placeChampion(x, y, champ, teamId, champ.getStarLevel());
+                        placed = true;
+                        placedCount++;
+                    }
+                }
+            }
+            
+            if (!placed) {
+                for (int y = 0; y < 4 && !placed; ++y) {
+                    for (int x = 0; x < 7 && !placed; ++x) {
+                        if (!board.isOccupied(x, y)) {
+                            board.placeChampion(x, y, champ, teamId, champ.getStarLevel());
+                            placed = true;
+                            placedCount++;
+                        }
+                    }
+                }
+            }
+        } else {
+            leftovers.push_back(champ);
+        }
+    }
+
+    for (size_t i = 0; i < leftovers.size() && i < 9; ++i) {
+        bench[i] = new Champion(leftovers[i]);
+    }
+}

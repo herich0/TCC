@@ -43,6 +43,8 @@ public:
     Champion* getBenchChampion(int index);
     void checkAutoCombine(Board& board);
     std::vector<Champion*> getBench() const;
+
+    void autoDeploy(Board& board, int teamId);
 };
 
 #endif
