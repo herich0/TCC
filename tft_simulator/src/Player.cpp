@@ -240,9 +240,17 @@ void Player::autoDeploy(Board& board, int teamId) {
     }
 
     if (allUnits.empty()) return;
+
     std::sort(allUnits.begin(), allUnits.end(), [](const Champion& a, const Champion& b) {
+        int powerA = a.getCost() + ((a.getStarLevel() - 1) * 3);
+        int powerB = b.getCost() + ((b.getStarLevel() - 1) * 3);
+
+        if (powerA != powerB) return powerA > powerB;
+
         if (a.getStarLevel() != b.getStarLevel()) return a.getStarLevel() > b.getStarLevel();
+        
         if (a.getCost() != b.getCost()) return a.getCost() > b.getCost();
+        
         return a.getName() > b.getName();
     });
 
